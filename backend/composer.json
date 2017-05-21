@@ -1,0 +1,19 @@
+{
+    "name": "magomogo/space-oddity",
+    "description": "Take your protein pills and put your helmet on",
+    "type": "project",
+    "require": {
+        "doctrine/dbal": "^2.5",
+        "silex/silex": "^2.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.0"
+    },
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Maxim Gnatenko",
+            "email": "mgnatenko@gmail.com"
+        }
+    ]
+}
