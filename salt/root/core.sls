@@ -2,7 +2,6 @@ corepkgs:
   pkg.installed:
     - pkgs:
       - php5
-      - apache2
       - postgresql
 
 composer.installed:
@@ -14,3 +13,10 @@ composer.installed:
     - unless: composer --version
     - require:
       - pkg: corepkgs
+
+apache2:
+  pkg:
+    - installed
+  service:
+    - running
+    - enable: True
