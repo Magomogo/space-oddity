@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Magomogo/space-oddity.svg?branch=master)](https://travis-ci.org/Magomogo/space-oddity)
+
 # Space oddity
 
 Take your protein pills and put your helmet on
