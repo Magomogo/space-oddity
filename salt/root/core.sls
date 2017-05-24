@@ -2,7 +2,6 @@ corepkgs:
   pkg.installed:
     - pkgs:
       - php5
-      - postgresql
 
 composer.installed:
   file.managed:
@@ -15,6 +14,13 @@ composer.installed:
       - pkg: corepkgs
 
 apache2:
+  pkg:
+    - installed
+  service:
+    - running
+    - enable: True
+
+postgresql:
   pkg:
     - installed
   service:

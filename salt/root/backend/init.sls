@@ -35,3 +35,6 @@ apache2_rewrite:
   file.absent:
     - require_in:
       - service: apache2
+
+include:
+  - .database
