@@ -9,6 +9,23 @@ trust-soket-connections:
     - watch_in:
       - service: postgresql
 
+connections-from-host-allowed:
+  file.append:
+    - name: /etc/postgresql/9.4/main/pg_hba.conf
+    - text: host all all 192.168.55.1/32 trust
+    - require:
+      - pkg: postgresql
+    - watch_in:
+      - service: postgresql
+
+/etc/postgresql/9.4/main/postgresql.conf:
+  file.append:
+    - text: listen_addresses = '*'
+    - require:
+      - pkg: postgresql
+    - watch_in:
+      - service: postgresql
+
 acmepay:
   postgres_user.present:
     - password: acmepay
