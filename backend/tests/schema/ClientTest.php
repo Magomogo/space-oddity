@@ -6,7 +6,7 @@ use Acme\Pay\Test\SchemaTestCase;
 
 class ClientTest extends SchemaTestCase
 {
-    protected static $schemaId = 'http://acmepay.local/schema/client.json#';
+    protected static $schemaId = 'file://' . __DIR__  . '/../../www/schema/client.json#';
 
     public function testRegularClientIsValid()
     {

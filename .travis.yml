@@ -8,7 +8,3 @@ install:
 
 script:
   - ./vendor/bin/phpunit
-
-addons:
-  hosts:
-    - acmepay.local
