@@ -1,0 +1,13 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://acmepay.local/schema/client.json#",
+
+    "type": "object",
+    "properties": {
+        "name": {"type": "string"},
+        "country": {"type": "string"},
+        "city": {"type": "string"}
+    },
+    "required": ["name"],
+    "additionalProperties": false
+}
