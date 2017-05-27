@@ -4,7 +4,9 @@
     "type": "project",
     "require": {
         "doctrine/dbal": "^2.5",
-        "silex/silex": "^2.1"
+        "silex/silex": "^2.1",
+        "league/json-guard": "^1.0",
+        "league/json-reference": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.0",
@@ -17,5 +19,10 @@
             "name": "Maxim Gnatenko",
             "email": "mgnatenko@gmail.com"
         }
-    ]
+    ],
+    "autoload-dev": {
+        "psr-4": {
+            "Acme\\Pay\\Test\\": "tests/lib"
+        }
+    }
 }

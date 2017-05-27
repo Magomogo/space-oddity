@@ -2,6 +2,7 @@ corepkgs:
   pkg.installed:
     - pkgs:
       - php5
+      - curl
 
 composer.installed:
   file.managed:
@@ -26,3 +27,7 @@ postgresql:
   service:
     - running
     - enable: True
+
+acmepay.local:
+  host.present:
+    - ip: 127.0.0.1
