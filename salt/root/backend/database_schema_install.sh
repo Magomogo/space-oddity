@@ -5,7 +5,9 @@ CREATE TABLE client (
     id SERIAL PRIMARY KEY,
     name TEXT,
     country TEXT,
-    city TEXT
+    city TEXT,
+
+    CONSTRAINT client_name_uindex UNIQUE (name)
 );
 
 CREATE TABLE currency (
