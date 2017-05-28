@@ -9,7 +9,8 @@ install:
   - composer install
 
 before_script:
-  - sudo /usr/bin/php -S 127.0.0.1:80 -t ./www/ &
+  - which php
+  - sudo /usr/bin/env php -S 127.0.0.1:80 -t ./www/ &
 
 script:
   - ./vendor/bin/phpunit
