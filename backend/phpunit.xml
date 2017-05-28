@@ -8,6 +8,7 @@
          beStrictAboutOutputDuringTests="true"
          beStrictAboutTodoAnnotatedTests="true"
          stopOnError="true"
+         stopOnFailure="true"
          verbose="true">
     <testsuite>
         <directory suffix="Test.php">tests</directory>
@@ -22,4 +23,8 @@
     <listeners>
         <listener class="\Mockery\Adapter\Phpunit\TestListener"/>
     </listeners>
+
+    <php>
+        <const name="TEST_MODE"/>
+    </php>
 </phpunit>

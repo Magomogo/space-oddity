@@ -38,7 +38,11 @@ $app->error(function (\Symfony\Component\HttpKernel\Exception\BadRequestHttpExce
 });
 
 $app->error(function (\Exception $e) {
+    if (defined('TEST_MODE')) {
+        echo (string)$e;
+    }
+
     return HttpFoundation\Response::create((string)$e, 500);
-}, 8);
+});
 
 return $app;
