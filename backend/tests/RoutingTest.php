@@ -4,6 +4,7 @@ namespace Acme\Pay;
 
 use Silex\WebTestCase;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Mockery as m;
 
 class RoutingTest extends WebTestCase
 {
@@ -32,5 +33,23 @@ class RoutingTest extends WebTestCase
             'Welcome to ACME pay',
             $crawler->filter('h1')->text()
         );
+    }
+
+    public function testThereIsARouteForClientCreation()
+    {
+        $this->app['clients-service'] = m::mock(['newClient' => true]);
+
+        $client = $this->createClient();
+        $client->request('POST', '/client', [], [], [], '{"name": "John Doe"}');
+
+        $this->assertSame(201, $client->getResponse()->getStatusCode());
+    }
+
+    public function testIncomingClientJsonIsValidated()
+    {
+        $client = $this->createClient();
+        $client->request('POST', '/client', [], [], [], '{"not-a": "client"}');
+
+        $this->assertSame(400, $client->getResponse()->getStatusCode());
     }
 }
