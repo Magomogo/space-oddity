@@ -39,7 +39,7 @@ $app->post('/client', function (HttpFoundation\Request $request) use ($app) {
 });
 
 $app->error(function (BadRequestHttpException $e) use ($app) {
-    return $app->json(json_decode($e->getMessage()), 400)->setEncodingOptions(JSON_PRETTY_PRINT);
+    return $app->json(json_decode($e->getMessage()), 400);
 });
 
 $app->error(function (\Exception $e) {
@@ -48,6 +48,15 @@ $app->error(function (\Exception $e) {
     }
 
     return HttpFoundation\Response::create((string)$e, 500);
+});
+
+$app->after(function (HttpFoundation\Request $request, HttpFoundation\Response $response) {
+    if($response->headers->get('Content-type') === 'application/json') {
+        $response->setContent(
+            json_encode(json_decode($response->getContent()), JSON_PRETTY_PRINT)
+            . "\n"
+        );
+    }
 });
 
 return $app;
