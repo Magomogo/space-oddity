@@ -17,11 +17,17 @@ Take your protein pills and put your helmet on
 
 1. Up vagrant.
 
-           vagrant up
+        vagrant up
 
 1. Navigate to http://acmepay.local
 
-# development
+# Control
+
+## Create a new client
+
+    curl -X POST -d '{"name": "John Doe"}' http://acmepay.local/client
+
+# Development
 
 Start the VM:
 
