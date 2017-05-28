@@ -1,23 +1,29 @@
 <?php
 
-use Acme\Pay\ServiceProvider\JsonValidatorServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
+use Acme\Pay\ServiceProvider;
+use Acme\Pay\Service;
 
 $app = new Silex\Application();
-$app->register(new JsonValidatorServiceProvider());
+$app->register(new ServiceProvider\JsonValidatorServiceProvider());
+$app->register(new ServiceProvider\ClientsServiceProvider());
 
 $app->get('/', function () {
     return '<h1>Welcome to ACME pay!</h1>';
 });
 
 $app->post('/client', function (Request $request) use ($app) {
-    /** @var \Acme\Pay\Service\JsonValidator $jsonValidator */
-    $jsonValidator = $app['data_types_validator'];
+    /** @var Service\JsonValidator $jsonValidator */
+    $jsonValidator = $app['data-types-validator'];
 
     $newClient = $jsonValidator->assertValid(
         json_decode($request->getContent()),
         'http://acmepay.local/schema/client.json'
     );
+
+    /** @var Service\Clients $clientsService */
+    $clientsService = $app['clients-service'];
+    $clientsService->create($newClient);
 
     return $app->json([], 201);
 });
