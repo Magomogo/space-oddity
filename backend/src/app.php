@@ -75,6 +75,41 @@ $app->post(
     }
 );
 
+$app->post('/currency/{code}/rate/{rate}', function ($code, $rate, HttpFoundation\Request $request) use ($app) {
+
+    /** @var Service\JsonValidator $jsonValidator */
+    $jsonValidator = $app['data-types-validator'];
+    $currency = $jsonValidator->assertValid(
+        $code,
+        'http://acmepay.local/schema/currency.json'
+    );
+
+    if ($rate === 0.0) {
+        throw new BadRequestHttpException('Currency rate cannot be zero');
+    }
+
+    if ($request->query->has('date')) {
+        try {
+            $date = (new \DateTime($request->get('date')))->format('Y-m-d');
+        } catch (\Exception $e) {
+            throw new BadRequestHttpException('Invalid date');
+        }
+    } else {
+        $date = (new \DateTime('tomorrow'))->format('Y-m-d');
+    }
+
+    /** @var Service\Currencies $currenciesService */
+    $currenciesService = $app['currencies-service'];
+    $currenciesService->defineRate($currency, $rate, $date);
+
+    return $app->json(['message' => 'created'], 201);
+})->convert(
+    'rate',
+    function ($rate) {
+        return (float)$rate;
+    }
+);
+
 $app->error(function (BadRequestHttpException $e) use ($app) {
     return $app->json(json_decode($e->getMessage()), 400);
 });
