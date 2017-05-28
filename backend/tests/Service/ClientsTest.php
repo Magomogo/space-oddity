@@ -2,7 +2,7 @@
 
 namespace Acme\Pay\Service;
 
-use Acme\Pay\Exception\ClientAlreadyExists;
+use Acme\Pay\Exception;
 use Doctrine\DBAL\Driver\DriverException;
 use Mockery as m;
 use Acme\Pay\Test;
@@ -24,7 +24,7 @@ class ClientsTest extends \PHPUnit_Framework_TestCase
         $db = m::mock(['lastInsertId' => 42]);
         $db->shouldReceive('insert')->andThrow(new UniqueConstraintViolationException('arrgh', m::mock(DriverException::class)));
 
-        $this->expectException(ClientAlreadyExists::class);
+        $this->expectException(Exception\ClientAlreadyExists::class);
 
         (new Clients($db))->create(Test\Data::johnDoeFromSanFrancisco());
     }
@@ -48,5 +48,12 @@ class ClientsTest extends \PHPUnit_Framework_TestCase
             (array)Test\Data::johnDoeFromSanFrancisco(),
             (array)$client
         );
+    }
+
+    public function testThrowsWhenAClientCannotBeFound()
+    {
+        $this->expectException(Exception\ClientDoesNotExists::class);
+
+        (new Clients(m::mock(['fetchAssoc' => false])))->getByName('John Doe');
     }
 }

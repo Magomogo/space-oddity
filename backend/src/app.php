@@ -1,14 +1,15 @@
 <?php
+namespace Acme\Pay;
 
+use Silex\Application;
+use Silex\Provider\DoctrineServiceProvider;
 use Symfony\Component\HttpFoundation;
-use Acme\Pay\ServiceProvider;
-use Acme\Pay\Service;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-$app = new Silex\Application();
+$app = new Application();
 $app->register(new ServiceProvider\JsonValidatorServiceProvider());
 $app->register(new ServiceProvider\EntitiesServiceProvider());
-$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+$app->register(new DoctrineServiceProvider(), array(
     'db.options' => array(
         'url'   => 'pgsql://acmepay:acmepay@127.0.0.1/acmepay',
     ),
@@ -37,7 +38,7 @@ $app->post('/client', function (HttpFoundation\Request $request) use ($app) {
             ['Location' => '/client/' . rawurlencode($newClient->name)]
         );
 
-    } catch (\Acme\Pay\Exception\ClientAlreadyExists $e) {
+    } catch (Exception\ClientAlreadyExists $e) {
         throw new BadRequestHttpException(json_encode(['message' => $e->getMessage()]));
     }
 
@@ -49,7 +50,11 @@ $app->post(
 
         /** @var Service\Clients $clientsService */
         $clientsService = $app['clients-service'];
-        $client = $clientsService->getByName($clientName);
+        try {
+            $client = $clientsService->getByName($clientName);
+        } catch (Exception\ClientDoesNotExists $e) {
+            throw new BadRequestHttpException(json_encode(['message' => $e->getMessage()]));
+        }
 
         /** @var Service\JsonValidator $jsonValidator */
         $jsonValidator = $app['data-types-validator'];

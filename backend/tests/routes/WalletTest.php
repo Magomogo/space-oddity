@@ -1,6 +1,6 @@
 <?php
 
-namespace Acme\Pay;
+namespace Acme\Pay\Routes;
 
 use Mockery as m;
 use Acme\Pay\Test;
@@ -18,11 +18,12 @@ class WalletTest extends Test\WebTestCase
         $this->assertSame(201, $client->getResponse()->getStatusCode());
     }
 
-    public function testDelegatesAClientCreationToClientsService()
+    public function testDelegatesAWalletCreationToWalletService()
     {
         $walletsService = m::mock();
         $walletsService->shouldReceive('create')->once()->andReturn((object)['id' => 42]);
 
+        $this->app['clients-service'] = m::mock(['getByName' => Test\Data::johnDoeFromSanFrancisco()]);
         $this->app['wallets-service'] = $walletsService;
         $this->createClient()->request('POST', '/client/John/wallet/USD');
     }
