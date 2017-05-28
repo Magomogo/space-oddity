@@ -3,6 +3,7 @@
 namespace Acme\Pay\Service;
 
 use Mockery as m;
+use Acme\Pay\Exception\CurrencyRateUndefined;
 
 class CurrenciesTest extends \PHPUnit_Framework_TestCase
 {
@@ -42,5 +43,12 @@ class CurrenciesTest extends \PHPUnit_Framework_TestCase
         $amountInEur = (new Currencies($db))->convert(10000, 'RUR', 'EUR');
 
         $this->assertSame(158, $amountInEur);
+    }
+
+    public function testThrowsWhenRatesAreUndefined()
+    {
+        $this->expectException(CurrencyRateUndefined::class);
+
+        (new Currencies(m::mock(['fetchAll' => []])))->convert(10000, 'RUR', 'EUR');
     }
 }

@@ -3,6 +3,7 @@
 namespace Acme\Pay\Service;
 
 use Acme\Pay\Exception\CurrencyRateForThisDateIsAlreadyDefined;
+use Acme\Pay\Exception\CurrencyRateUndefined;
 use Doctrine\DBAL;
 
 class Currencies
@@ -57,6 +58,13 @@ class Currencies
                 \PDO::PARAM_STR
             ]
         );
+
+        if (count($list) !== 2) {
+            throw new CurrencyRateUndefined(
+                sprintf('Rates for conversion %s -> %s are not known', $currency, $targetCurrency)
+            );
+        }
+
         $rates = array_combine(
             array_column($list, 'code'),
             array_column($list, 'rate')
