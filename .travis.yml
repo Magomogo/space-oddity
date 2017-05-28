@@ -6,5 +6,12 @@ install:
   - cd ./backend
   - composer install
 
+before_script:
+  - php -S 127.0.0.1:8000 -t ./www/ &
+
 script:
   - ./vendor/bin/phpunit
+
+addons:
+  hosts:
+    - acmepay.local
