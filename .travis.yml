@@ -9,8 +9,7 @@ install:
   - composer install
 
 before_script:
-  - which php
-  - sudo /usr/bin/env php -S 127.0.0.1:80 -t ./www/ &
+  - sudo /home/travis/.phpenv/shims/php -S 127.0.0.1:80 -t ./www/ &
 
 script:
   - ./vendor/bin/phpunit
