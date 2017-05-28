@@ -11,9 +11,10 @@ CREATE TABLE client (
 );
 
 CREATE TABLE currency (
-    code CHAR(3) PRIMARY KEY,
-    rate FLOAT NOT NULL
+    code CHAR(3) PRIMARY KEY
 );
+
+INSERT INTO currency VALUES('USD'), ('EUR'), ('RUR');
 
 CREATE TABLE currency_rates (
     \"date\" DATE,

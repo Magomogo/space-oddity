@@ -44,8 +44,8 @@ class Clients
         $client = new \stdClass();
         $client->id = $row['id'];
         $client->name = $row['name'];
-        $client->city = $row['city'];
-        $client->country = $row['country'];
+        ($row['city'] !== null) && $client->city = $row['city'];
+        ($row['country'] !== null) && $client->country = $row['country'];
 
         return $client;
     }
