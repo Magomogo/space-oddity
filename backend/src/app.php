@@ -3,6 +3,7 @@
 use Symfony\Component\HttpFoundation;
 use Acme\Pay\ServiceProvider;
 use Acme\Pay\Service;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 $app = new Silex\Application();
 $app->register(new ServiceProvider\JsonValidatorServiceProvider());
@@ -28,12 +29,16 @@ $app->post('/client', function (HttpFoundation\Request $request) use ($app) {
 
     /** @var Service\Clients $clientsService */
     $clientsService = $app['clients-service'];
-    $clientsService->create($newClient);
+    try {
+        $clientsService->create($newClient);
+    } catch (\Acme\Pay\Exception\ClientAlreadyExists $e) {
+        throw new BadRequestHttpException(json_encode($e->getMessage()));
+    }
 
     return $app->json([], 201);
 });
 
-$app->error(function (\Symfony\Component\HttpKernel\Exception\BadRequestHttpException $e) use ($app) {
+$app->error(function (BadRequestHttpException $e) use ($app) {
     return $app->json(json_decode($e->getMessage()), 400);
 });
 

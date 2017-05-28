@@ -3,17 +3,18 @@
 namespace Acme\Pay\Service;
 
 use Acme\Pay\Client\DbMapper;
-use Doctrine\DBAL\Connection;
+use Acme\Pay\Exception\ClientAlreadyExists;
+use Doctrine\DBAL;
 
 class Clients
 {
     /**
-     * @var Connection
+     * @var DBAL\Connection
      */
     private $db;
 
     /**
-     * @param Connection $db
+     * @param DBAL\Connection $db
      */
     public function __construct($db)
     {
@@ -22,11 +23,16 @@ class Clients
 
     /**
      * @param \stdClass $client http://acmepay.local/schema/client.json
-     * @return integer new client ID
+     * @return int new client ID
+     * @throws ClientAlreadyExists
      */
     public function create($client)
     {
-        $this->db->insert('client', (new DbMapper($client))->clientsTableRow());
+        try {
+            $this->db->insert('client', (new DbMapper($client))->clientsTableRow());
+        } catch (DBAL\Exception\UniqueConstraintViolationException $e) {
+            throw new ClientAlreadyExists('Name ' . $client->name . ' is already taken', 0, $e);
+        }
         return $this->db->lastInsertId('client_id_seq');
     }
 }
