@@ -32,14 +32,14 @@ $app->post('/client', function (HttpFoundation\Request $request) use ($app) {
     try {
         $clientsService->create($newClient);
     } catch (\Acme\Pay\Exception\ClientAlreadyExists $e) {
-        throw new BadRequestHttpException(json_encode($e->getMessage()));
+        throw new BadRequestHttpException(json_encode(['message' => $e->getMessage()]));
     }
 
     return $app->json([], 201);
 });
 
 $app->error(function (BadRequestHttpException $e) use ($app) {
-    return $app->json(json_decode($e->getMessage()), 400);
+    return $app->json(json_decode($e->getMessage()), 400)->setEncodingOptions(JSON_PRETTY_PRINT);
 });
 
 $app->error(function (\Exception $e) {

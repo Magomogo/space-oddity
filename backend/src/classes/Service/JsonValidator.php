@@ -13,12 +13,10 @@ class JsonValidator
         $validator = new Validator($data, Dereferencer::draft4()->dereference($schemaId));
 
         if ($validator->fails()) {
-            throw new BadRequestHttpException(
-                json_encode(
-                    array_map(function ($e) { return $e->toArray(); } , $validator->errors()),
-                    true
-                )
-            );
+            throw new BadRequestHttpException(json_encode([
+                'message' => 'Json schema violation',
+                'details' => array_map(function ($e) { return $e->toArray(); } , $validator->errors()),
+            ]));
         }
 
         return $data;
