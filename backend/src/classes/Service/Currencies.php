@@ -43,4 +43,27 @@ class Currencies
             );
         }
     }
+
+    public function convert($amount, $currency, $targetCurrency)
+    {
+        $list = $this->db->fetchAll(
+            'SELECT code, rate FROM currency_rates WHERE code IN (?) AND date = ?',
+            [
+                [$currency, $targetCurrency],
+                date('Y-m-d')
+            ],
+            [
+                DBAL\Connection::PARAM_STR_ARRAY,
+                \PDO::PARAM_STR
+            ]
+        );
+        $rates = array_combine(
+            array_column($list, 'code'),
+            array_column($list, 'rate')
+        );
+
+        return (int)round(
+            $amount / $rates[$currency] * $rates[$targetCurrency]
+        );
+    }
 }
