@@ -13,7 +13,7 @@ Client registration. Name should be unique since it is in use to identify a clie
 
     + Body
 
-        {}
+        {"message" => "created"}
 
     + Headers
 

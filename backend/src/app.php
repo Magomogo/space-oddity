@@ -35,7 +35,7 @@ $app->post('/client', function (HttpFoundation\Request $request) use ($app) {
         throw new BadRequestHttpException(json_encode(['message' => $e->getMessage()]));
     }
 
-    return $app->json([], 201);
+    return $app->json(['message' => 'created'], 201, ['Location' => '/client/' . rawurlencode($newClient->name)]);
 });
 
 $app->error(function (BadRequestHttpException $e) use ($app) {
