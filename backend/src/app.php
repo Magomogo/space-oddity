@@ -30,12 +30,17 @@ $app->post('/client', function (HttpFoundation\Request $request) use ($app) {
     /** @var Service\Clients $clientsService */
     $clientsService = $app['clients-service'];
     try {
-        $clientsService->create($newClient);
+
+        return $app->json(
+            $clientsService->create($newClient),
+            201,
+            ['Location' => '/client/' . rawurlencode($newClient->name)]
+        );
+
     } catch (\Acme\Pay\Exception\ClientAlreadyExists $e) {
         throw new BadRequestHttpException(json_encode(['message' => $e->getMessage()]));
     }
 
-    return $app->json(['message' => 'created'], 201, ['Location' => '/client/' . rawurlencode($newClient->name)]);
 });
 
 $app->error(function (BadRequestHttpException $e) use ($app) {

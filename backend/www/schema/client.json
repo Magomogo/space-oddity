@@ -4,6 +4,7 @@
 
     "type": "object",
     "properties": {
+        "id": {"type": "number"},
         "name": {"type": "string"},
         "country": {"type": "string"},
         "city": {"type": "string"}

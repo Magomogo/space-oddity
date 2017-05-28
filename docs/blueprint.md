@@ -7,13 +7,13 @@ Client registration. Name should be unique since it is in use to identify a clie
 + Request
     + Schema
 
-    :[Schema](http://acmepay.local/schema/client.json)
+        :[Client](http://acmepay.local/schema/client.json)
 
 + Response 201 (application/json)
 
-    + Body
+    + Schema
 
-        {"message" => "created"}
+        :[Client](http://acmepay.local/schema/client.json)
 
     + Headers
 

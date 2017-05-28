@@ -23,7 +23,7 @@ class Clients
 
     /**
      * @param \stdClass $client http://acmepay.local/schema/client.json
-     * @return int new client ID
+     * @return \stdClass $client http://acmepay.local/schema/client.json
      * @throws ClientAlreadyExists
      */
     public function create($client)
@@ -33,6 +33,7 @@ class Clients
         } catch (DBAL\Exception\UniqueConstraintViolationException $e) {
             throw new ClientAlreadyExists('Name ' . $client->name . ' is already taken', 0, $e);
         }
-        return $this->db->lastInsertId('client_id_seq');
+        $client->id = $this->db->lastInsertId('client_id_seq');
+        return $client;
     }
 }
