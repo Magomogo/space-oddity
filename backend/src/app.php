@@ -85,22 +85,26 @@ $app->post('/currency/{code}/rate/{rate}', function ($code, $rate, HttpFoundatio
     );
 
     if ($rate === 0.0) {
-        throw new BadRequestHttpException('Currency rate cannot be zero');
+        throw new BadRequestHttpException(json_encode(['message' =>'Currency rate cannot be zero']));
     }
 
     if ($request->query->has('date')) {
         try {
             $date = (new \DateTime($request->get('date')))->format('Y-m-d');
         } catch (\Exception $e) {
-            throw new BadRequestHttpException('Invalid date');
+            throw new BadRequestHttpException(json_encode(['message' => 'Invalid date']));
         }
     } else {
         $date = (new \DateTime('tomorrow'))->format('Y-m-d');
     }
 
-    /** @var Service\Currencies $currenciesService */
-    $currenciesService = $app['currencies-service'];
-    $currenciesService->defineRate($currency, $rate, $date);
+    try {
+        /** @var Service\Currencies $currenciesService */
+        $currenciesService = $app['currencies-service'];
+        $currenciesService->defineRate($currency, $rate, $date);
+    } catch (Exception\CurrencyRateForThisDateIsAlreadyDefined $e) {
+        throw new BadRequestHttpException(json_encode(['message' => $e->getMessage()]));
+    }
 
     return $app->json(['message' => 'created'], 201);
 })->convert(
