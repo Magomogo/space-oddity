@@ -39,6 +39,14 @@ class Clients
 
     public function getByName($name)
     {
-        return new \stdClass;
+        $row = $this->db->fetchAssoc('SELECT * FROM client WHERE name = ?', [$name]);
+
+        $client = new \stdClass();
+        $client->id = $row['id'];
+        $client->name = $row['name'];
+        $client->city = $row['city'];
+        $client->country = $row['country'];
+
+        return $client;
     }
 }

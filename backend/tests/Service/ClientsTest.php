@@ -28,4 +28,25 @@ class ClientsTest extends \PHPUnit_Framework_TestCase
 
         (new Clients($db))->create(Test\Data::johnDoeFromSanFrancisco());
     }
+
+    public function testAClientCanBeObtainedByName()
+    {
+        $db = m::mock();
+        $db->shouldReceive('fetchAssoc')
+            ->with(m::type('string'), ['John Doe'])
+            ->once()
+            ->andReturn([
+                'id' => 42,
+                'name' => 'John Doe',
+                'city' => 'San Francisco',
+                'country' => 'USA'
+            ]);
+
+        $client = (new Clients($db))->getByName('John Doe');
+
+        $this->assertArraySubset(
+            (array)Test\Data::johnDoeFromSanFrancisco(),
+            (array)$client
+        );
+    }
 }
