@@ -51,4 +51,20 @@ class CurrenciesTest extends \PHPUnit_Framework_TestCase
 
         (new Currencies(m::mock(['fetchAll' => []])))->convert(10000, 'RUR', 'EUR');
     }
+
+    public function testUsesProvidedCacheObject()
+    {
+        $cache = m::mock([
+            'getItem' => m::mock([
+                'expiresAfter' => null,
+                'get' => [
+                    'EUR' => 0.894434,
+                    'RUR' => 56.57
+                ],
+                'isHit' => true
+            ])
+        ]);
+
+        (new Currencies(m::mock(), $cache))->convert(10000, 'RUR', 'EUR');
+    }
 }

@@ -4,6 +4,7 @@ corepkgs:
       - php5
       - php5-pgsql
       - curl
+      - git
 
 composer.installed:
   file.managed:
