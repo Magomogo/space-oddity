@@ -10,7 +10,6 @@ class DbMapper
     private $client;
 
     /**
-     * DbMapper constructor.
      * @param \stdClass $client http://acmepay.local/schema/client.json
      */
     public function __construct($client)
