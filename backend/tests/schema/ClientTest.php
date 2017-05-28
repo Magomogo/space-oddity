@@ -3,6 +3,7 @@
 namespace Acme\Pay\Schema;
 
 use Acme\Pay\Test\SchemaTestCase;
+use Acme\Pay\Test;
 
 class ClientTest extends SchemaTestCase
 {
@@ -10,16 +11,7 @@ class ClientTest extends SchemaTestCase
 
     public function testRegularClientIsValid()
     {
-        $client = json_decode(<<<JSON
-{
-    "name": "Jon Doe",
-    "country": "Angola",
-    "city": "Luanda"
-}
-JSON
-        );
-
-        self::assertValid($client);
+        self::assertValid(Test\Data::johnDoeFromSanFrancisco());
     }
 
     public function testExtraParamsAreNotAllowed()

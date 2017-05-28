@@ -2,6 +2,8 @@
 
 namespace Acme\Pay\Client;
 
+use Acme\Pay\Test;
+
 class DbMapperTest extends \PHPUnit_Framework_TestCase
 {
     public function testMapAClientDataTypeIntoDatabaseCells()
@@ -12,14 +14,7 @@ class DbMapperTest extends \PHPUnit_Framework_TestCase
                 'city' => 'San Francisco',
                 'country' => 'USA'
             ],
-            (new DbMapper(json_decode(<<<JSON
-{
-    "name": "John Doe",
-    "city": "San Francisco",
-    "country": "USA"
-}
-JSON
-            )))->clientsTableRow()
+            (new DbMapper(Test\Data::johnDoeFromSanFrancisco()))->clientsTableRow()
         );
     }
 }

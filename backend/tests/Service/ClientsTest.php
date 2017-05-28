@@ -3,6 +3,7 @@
 namespace Acme\Pay\Service;
 
 use Mockery as m;
+use Acme\Pay\Test;
 
 class ClientsTest extends \PHPUnit_Framework_TestCase
 {
@@ -11,14 +12,7 @@ class ClientsTest extends \PHPUnit_Framework_TestCase
         $db = m::mock(['lastInsertId' => 42]);
         $db->shouldReceive('insert')->once();
 
-        (new Clients($db))->create(json_decode(<<<JSON
-{
-    "name": "John Doe",
-    "city": "San Francisco",
-    "country": "USA"
-}
-JSON
-        ));
+        (new Clients($db))->create(Test\Data::johnDoeFromSanFrancisco());
 
     }
 }
