@@ -29,7 +29,7 @@ class Clients
     public function create($client)
     {
         try {
-            $this->db->insert('client', (new DbMapper($client))->clientsTableRow());
+            $this->db->insert('client', (new DbMapper($client))->clientTableRow());
         } catch (DBAL\Exception\UniqueConstraintViolationException $e) {
             throw new Exception\ClientAlreadyExists('Name ' . $client->name . ' is already taken', 0, $e);
         }

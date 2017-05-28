@@ -14,7 +14,7 @@ class DbMapperTest extends \PHPUnit_Framework_TestCase
                 'city' => 'San Francisco',
                 'country' => 'USA'
             ],
-            (new DbMapper(Test\Data::johnDoeFromSanFrancisco()))->clientsTableRow()
+            (new DbMapper(Test\Data::johnDoeFromSanFrancisco()))->clientTableRow()
         );
     }
 }

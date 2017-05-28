@@ -20,7 +20,7 @@ class DbMapper
     /**
      * @return array
      */
-    public function clientsTableRow()
+    public function clientTableRow()
     {
         return [
             'name' => $this->client->name,
