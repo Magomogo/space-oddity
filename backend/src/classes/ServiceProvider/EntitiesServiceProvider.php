@@ -2,17 +2,20 @@
 
 namespace Acme\Pay\ServiceProvider;
 
-use Acme\Pay\Service\Clients;
+use Acme\Pay\Service;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
-class ClientsServiceProvider implements ServiceProviderInterface
+class EntitiesServiceProvider implements ServiceProviderInterface
 {
 
     public function register(Container $app)
     {
         $app['clients-service'] = $app->factory(function () use ($app) {
-            return new Clients($app['db']);
+            return new Service\Clients($app['db']);
+        });
+        $app['wallets-service'] = $app->factory(function () use ($app) {
+            return new Service\Wallets($app['db']);
         });
     }
 

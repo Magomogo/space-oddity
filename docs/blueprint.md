@@ -24,15 +24,15 @@ Client registration. Name should be unique since it is in use to identify a clie
 Create a wallet for a client
 
 + Parameters
-    + clientId: 1 (number, mandatory) - Id of a client
+    + clientName: John Doe (string, mandatory) - Id of a client
     + currencyCode: USD (string, mandatory) - ISO currency code
     + balance: 100000 (number, optional) - Start balance, cents, default 0
 
 + Response 201 (application/json)
 
-    + Body
+    + Schema
 
-        {}
+        :[Wallet](http://acmepay.local/schema/wallet.json)
 
     + Headers
 

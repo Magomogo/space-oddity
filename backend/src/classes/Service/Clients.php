@@ -36,4 +36,9 @@ class Clients
         $client->id = $this->db->lastInsertId('client_id_seq');
         return $client;
     }
+
+    public function getByName($name)
+    {
+        return new \stdClass;
+    }
 }

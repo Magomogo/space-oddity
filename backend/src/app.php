@@ -7,7 +7,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 $app = new Silex\Application();
 $app->register(new ServiceProvider\JsonValidatorServiceProvider());
-$app->register(new ServiceProvider\ClientsServiceProvider());
+$app->register(new ServiceProvider\EntitiesServiceProvider());
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
         'url'   => 'pgsql://acmepay:acmepay@127.0.0.1/acmepay',
@@ -42,6 +42,33 @@ $app->post('/client', function (HttpFoundation\Request $request) use ($app) {
     }
 
 });
+
+$app->post(
+    '/client/{clientName}/wallet/{currencyCode}',
+    function ($clientName, $currencyCode, HttpFoundation\Request $request) use ($app) {
+
+        /** @var Service\Clients $clientsService */
+        $clientsService = $app['clients-service'];
+        $client = $clientsService->getByName($clientName);
+
+        /** @var Service\JsonValidator $jsonValidator */
+        $jsonValidator = $app['data-types-validator'];
+        $walletCurrency = $jsonValidator->assertValid(
+            $currencyCode,
+            'http://acmepay.local/schema/currency.json'
+        );
+
+        /** @var Service\Wallets $walletsService */
+        $walletsService = $app['wallets-service'];
+        $wallet = $walletsService->create($client, $walletCurrency, $request->get('balance', 0));
+
+        return $app->json(
+            $wallet,
+            201,
+            ['Location' => '/wallet/' . $wallet->id]
+        );
+    }
+);
 
 $app->error(function (BadRequestHttpException $e) use ($app) {
     return $app->json(json_decode($e->getMessage()), 400);
