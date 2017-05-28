@@ -65,7 +65,7 @@ $app->post(
 
         /** @var Service\Wallets $walletsService */
         $walletsService = $app['wallets-service'];
-        $wallet = $walletsService->create($client, $walletCurrency, $request->get('balance', 0));
+        $wallet = $walletsService->create($client, $walletCurrency, (int)$request->get('balance', 0));
 
         return $app->json(
             $wallet,

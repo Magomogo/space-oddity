@@ -33,7 +33,7 @@ class Clients
         } catch (DBAL\Exception\UniqueConstraintViolationException $e) {
             throw new Exception\ClientAlreadyExists('Name ' . $client->name . ' is already taken', 0, $e);
         }
-        $client->id = $this->db->lastInsertId('client_id_seq');
+        $client->id = (int)$this->db->lastInsertId('client_id_seq');
         return $client;
     }
 
@@ -51,7 +51,7 @@ class Clients
         }
 
         $client = new \stdClass();
-        $client->id = $row['id'];
+        $client->id = (int)$row['id'];
         $client->name = $row['name'];
         ($row['city'] !== null) && $client->city = $row['city'];
         ($row['country'] !== null) && $client->country = $row['country'];

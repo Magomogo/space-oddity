@@ -27,6 +27,10 @@ Take your protein pills and put your helmet on
 
     curl -X POST -d '{"name": "John Doe"}' http://acmepay.local/client
 
+## Create a wallet
+
+    curl -X POST http://acmepay.local/client/John%20Doe/wallet/USD?balance=10000
+
 # Development
 
 Start the VM:

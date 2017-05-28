@@ -35,7 +35,7 @@ class Wallets
         $wallet->balance = $balance;
 
         $this->db->insert('wallet', (new DbMapper($wallet))->walletTableRow());
-        $wallet->id = $this->db->lastInsertId('wallet_id_seq');
+        $wallet->id = (int)$this->db->lastInsertId('wallet_id_seq');
 
         return $wallet;
     }
