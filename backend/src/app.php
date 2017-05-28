@@ -1,18 +1,23 @@
 <?php
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation;
 use Acme\Pay\ServiceProvider;
 use Acme\Pay\Service;
 
 $app = new Silex\Application();
 $app->register(new ServiceProvider\JsonValidatorServiceProvider());
 $app->register(new ServiceProvider\ClientsServiceProvider());
+$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+    'db.options' => array(
+        'url'   => 'pgsql://acmepay:acmepay@127.0.0.1/acmepay',
+    ),
+));
 
 $app->get('/', function () {
     return '<h1>Welcome to ACME pay!</h1>';
 });
 
-$app->post('/client', function (Request $request) use ($app) {
+$app->post('/client', function (HttpFoundation\Request $request) use ($app) {
     /** @var Service\JsonValidator $jsonValidator */
     $jsonValidator = $app['data-types-validator'];
 
@@ -31,5 +36,9 @@ $app->post('/client', function (Request $request) use ($app) {
 $app->error(function (\Symfony\Component\HttpKernel\Exception\BadRequestHttpException $e) use ($app) {
     return $app->json(json_decode($e->getMessage()), 400);
 });
+
+$app->error(function (\Exception $e) {
+    return HttpFoundation\Response::create((string)$e, 500);
+}, 8);
 
 return $app;

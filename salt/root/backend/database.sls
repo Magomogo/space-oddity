@@ -29,12 +29,12 @@ connections-from-host-allowed:
 acmepay:
   postgres_user.present:
     - password: acmepay
+    - superuser: true
     - require:
       - service: postgresql
 
   postgres_database.present:
     - require:
-      - postgres_user: acmepay
       - service: postgresql
 
 database-schema-is-deployed:

@@ -2,6 +2,7 @@ corepkgs:
   pkg.installed:
     - pkgs:
       - php5
+      - php5-pgsql
       - curl
 
 composer.installed:
