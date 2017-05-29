@@ -15,7 +15,7 @@ class EntitiesServiceProvider implements ServiceProviderInterface
             return new Service\Clients($app['db']);
         });
         $app['wallets-service'] = $app->factory(function () use ($app) {
-            return new Service\Wallets($app['db']);
+            return new Service\Wallets($app['db'], $app['currencies-service']);
         });
         $app['currencies-service'] = $app->factory(function () use ($app) {
             return new Service\Currencies($app['db']);

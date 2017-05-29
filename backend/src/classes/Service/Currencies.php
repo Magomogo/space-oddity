@@ -6,7 +6,6 @@ use Acme\Pay\Exception\CurrencyRateForThisDateIsAlreadyDefined;
 use Acme\Pay\Exception\CurrencyRateUndefined;
 use Doctrine\DBAL;
 use Stash\Interfaces\ItemInterface;
-use Stash\Invalidation;
 use Stash\Pool;
 
 class Currencies
@@ -54,8 +53,31 @@ class Currencies
         }
     }
 
+    /**
+     * @param integer $walletId1
+     * @param integer $walletId2
+     * @return array wallet id to currency code map
+     */
+    public function readCurrencies($walletId1, $walletId2)
+    {
+        $list = $this->db->fetchAll(
+            'SELECT id, currency FROM wallet WHERE id IN (?)',
+            [[$walletId1, $walletId2]],
+            [DBAL\Connection::PARAM_INT_ARRAY]
+        );
+
+        return array_combine(
+            array_column($list, 'id'),
+            array_column($list, 'currency')
+        );
+    }
+
     public function convert($amount, $currency, $targetCurrency)
     {
+        if ($currency === $targetCurrency) {
+            return $amount;
+        }
+
         $ratesFetchFunction = function () use ($currency, $targetCurrency) {
 
             $list = $this->db->fetchAll(

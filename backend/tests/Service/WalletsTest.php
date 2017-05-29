@@ -12,7 +12,7 @@ class WalletsTest extends \PHPUnit_Framework_TestCase
         $db = m::mock(['lastInsertId' => 2]);
         $db->shouldReceive('insert')->once();
 
-        $wallet = (new Wallets($db))->create(
+        $wallet = (new Wallets($db, m::mock()))->create(
             Test\Data::johnDoeFromSanFrancisco(42),
             'USD',
             1000
@@ -35,5 +35,22 @@ JSON
             ,
             json_encode($wallet, JSON_PRETTY_PRINT)
         );
+    }
+
+    public function testDoesTransfer()
+    {
+        $db = m::mock(['fetchColumn' => 'EUR', 'lastInsertId' => 88]);
+        $db->shouldReceive('transactional')->with(m::on(function ($arg) { $arg(); return true; }));
+        $db->shouldReceive('insert')->with('transaction', m::any())->ordered()->once();
+        $db->shouldReceive('insert')->with('transfer', m::any())->ordered()->twice();
+        $db->shouldReceive('executeUpdate')->ordered()->twice();
+
+        (new Wallets(
+            $db,
+            m::mock([
+                'readCurrencies' => [10 => 'USD', 20 => 'USD'],
+                'convert' => 20000
+            ])
+        ))->transfer(10, 20, 20000, 'own');
     }
 }

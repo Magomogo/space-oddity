@@ -13,11 +13,18 @@ class Wallets
     private $db;
 
     /**
-     * @param DBAL\Connection $db
+     * @var Currencies
      */
-    public function __construct($db)
+    private $currenciesService;
+
+    /**
+     * @param DBAL\Connection $db
+     * @param Currencies
+     */
+    public function __construct($db, $currenciesService)
     {
         $this->db = $db;
+        $this->currenciesService = $currenciesService;
     }
 
     /**
@@ -38,5 +45,78 @@ class Wallets
         $wallet->id = (int)$this->db->lastInsertId('wallet_id_seq');
 
         return $wallet;
+    }
+
+    /**
+     * @param integer $ownWalletId
+     * @param integer $theirWalletId
+     * @param integer $amount
+     * @param string $whichCurrency own|their
+     * @throws \Exception
+     */
+    public function transfer($ownWalletId, $theirWalletId, $amount, $whichCurrency)
+    {
+        $walletIdToCurrencyCodeMap = $this->currenciesService->readCurrencies($ownWalletId, $theirWalletId);
+
+        $this->db->transactional(function () use ($ownWalletId, $theirWalletId, $amount, $whichCurrency, $walletIdToCurrencyCodeMap) {
+
+            $transactionCurrency = $walletIdToCurrencyCodeMap[
+                $whichCurrency === 'own' ? $ownWalletId : $theirWalletId
+            ];
+
+            $this->db->insert('transaction', ['currency' => $transactionCurrency, 'amount' => $amount]);
+            $transactionId = $this->db->lastInsertId('transaction_id_seq');
+
+            if ($whichCurrency === 'own') {
+                $ownAmount = $amount;
+                $theirAmount = $this->currenciesService->convert(
+                    $amount,
+                    $walletIdToCurrencyCodeMap[$ownWalletId],
+                    $walletIdToCurrencyCodeMap[$theirWalletId]
+                );
+            } else {
+                $ownAmount = $this->currenciesService->convert(
+                    $amount,
+                    $walletIdToCurrencyCodeMap[$theirWalletId],
+                    $walletIdToCurrencyCodeMap[$ownWalletId]
+                );
+                $theirAmount = $amount;
+            }
+
+            $this->db->insert(
+                'transfer',
+                [
+                    'transaction_id' => $transactionId,
+                    'wallet_id' => $ownWalletId,
+                    'amount' => -$ownAmount
+                ]
+            );
+
+            $this->db->insert(
+                'transfer',
+                [
+                    'transaction_id' => $transactionId,
+                    'wallet_id' => $theirWalletId,
+                    'amount' => $theirAmount
+                ]
+            );
+
+            $this->db->executeUpdate(
+                'UPDATE wallet SET balance = balance - :ownAmount WHERE id = :id',
+                [
+                    'ownAmount' => $ownAmount,
+                    'id' => $ownWalletId,
+                ]
+            );
+
+            $this->db->executeUpdate(
+                'UPDATE wallet SET balance = balance + :theirAmount WHERE id = :id',
+                [
+                    'theirAmount' => $ownAmount,
+                    'id' => $theirWalletId,
+                ]
+            );
+
+        });
     }
 }
