@@ -38,7 +38,7 @@ Create a wallet for a client
 
         Location: /wallet/{$id}
 
-# PUT /wallet/{$fromWalletId}/transfer-to-wallet/{$toWalletId}/amount/{$amount}?currency={$which}
+# PUT /wallet/{$fromWalletId}/transfer-to/{$toWalletId}/amount/{$amount}?currency={$which}
 
 Transfer from one wallet to other.
 

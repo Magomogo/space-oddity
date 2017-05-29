@@ -114,6 +114,35 @@ $app->post('/currency/{code}/rate/{rate}', function ($code, $rate, HttpFoundatio
     }
 );
 
+$app->put(
+    '/wallet/{fromWalletId}/transfer-to/{toWalletId}/amount/{amount}',
+    function ($fromWalletId, $toWalletId, $amount, HttpFoundation\Request $request) use ($app) {
+
+        if ($amount <= 0) {
+            throw new BadRequestHttpException(json_encode(['message' =>'Amount should be more than zero']));
+        }
+
+        if ($request->query->has('currency') && !in_array($request->query->get('currency'), ['own', 'their'], true)) {
+            throw new BadRequestHttpException(json_encode(['message' =>'Transfer can be done in own or their currency']));
+        }
+
+        if ($fromWalletId === $toWalletId) {
+            throw new BadRequestHttpException(json_encode(['message' =>'Wallets should be different']));
+        }
+
+        /** @var Service\Wallets $walletsService */
+        $walletsService = $app['wallets-service'];
+        $walletsService->transfer($fromWalletId, $toWalletId, $amount, $request->query->get('currency', 'own'));
+
+        return $app->json(['message' => 'transferred']);
+    }
+)->convert(
+    'amount',
+    function ($amount) {
+        return (int)$amount;
+    }
+);
+
 $app->error(function (BadRequestHttpException $e) use ($app) {
     return $app->json(json_decode($e->getMessage()), 400);
 });
