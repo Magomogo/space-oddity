@@ -28,7 +28,7 @@ CREATE TABLE wallet (
     id SERIAL PRIMARY KEY,
     client_id INT NOT NULL,
     currency CHAR(3) NOT NULL,
-    balance INT DEFAULT 0,
+    balance INT DEFAULT 0 CONSTRAINT positive_balance CHECK (balance >= 0),
 
     CONSTRAINT wallet_client_id_fk FOREIGN KEY (client_id) REFERENCES client (id),
     CONSTRAINT wallet_currency_fk FOREIGN KEY (currency) REFERENCES currency (code)

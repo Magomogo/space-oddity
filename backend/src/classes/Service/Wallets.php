@@ -2,6 +2,7 @@
 
 namespace Acme\Pay\Service;
 
+use Acme\Pay\Exception\InsufficientBalance;
 use Acme\Pay\Exception\TransferPathIsNotFound;
 use Acme\Pay\Wallet\DbMapper;
 use Doctrine\DBAL;
@@ -106,13 +107,22 @@ class Wallets
                 ]
             );
 
-            $this->db->executeUpdate(
-                'UPDATE wallet SET balance = balance - :ownAmount WHERE id = :id',
-                [
-                    'ownAmount' => $ownAmount,
-                    'id' => $ownWalletId,
-                ]
-            );
+            try {
+
+                $this->db->executeUpdate(
+                    'UPDATE wallet SET balance = balance - :ownAmount WHERE id = :id',
+                    [
+                        'ownAmount' => $ownAmount,
+                        'id' => $ownWalletId,
+                    ]
+                );
+
+            } catch (DBAL\Exception\DriverException $e) {
+                if (strpos($e->getMessage(), 'positive_balance') !== false) {
+                    throw new InsufficientBalance();
+                }
+                throw $e;
+            }
 
             $this->db->executeUpdate(
                 'UPDATE wallet SET balance = balance + :theirAmount WHERE id = :id',
@@ -121,7 +131,6 @@ class Wallets
                     'id' => $theirWalletId,
                 ]
             );
-
         });
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Acme\Pay\Service;
 
-use Acme\Pay\Exception\TransferPathIsNotFound;
+use Acme\Pay\Exception;
 use Acme\Pay\Test;
 use Mockery as m;
 
@@ -57,7 +57,7 @@ JSON
 
     public function testThrowsWhenOneOfBothWalletsAreNotFound()
     {
-        $this->expectException(TransferPathIsNotFound::class);
+        $this->expectException(Exception\TransferPathIsNotFound::class);
 
         (new Wallets(
             m::mock(),
@@ -65,5 +65,28 @@ JSON
                 'readCurrencies' => [],
             ])
         ))->transfer(10, 20, 20000, 'own');
+    }
+
+    public function testThrowsWhenPositiveBalanceViolation()
+    {
+        $db = m::mock(['insert' => null, 'lastInsertId' => 88]);
+        $db->shouldReceive('transactional')->with(m::on(function ($arg) { $arg(); return true; }));
+
+        $db->shouldReceive('executeUpdate')
+            ->andThrow(new \Doctrine\DBAL\Exception\DriverException(
+                'Check violation: 7 ERROR:  new row for relation "wallet" violates check constraint "positive_balance"',
+                m::mock(\Doctrine\DBAL\Driver\DriverException::class)
+            ));
+
+        $this->expectException(Exception\InsufficientBalance::class);
+
+        (new Wallets(
+            $db,
+            m::mock([
+                'readCurrencies' => [10 => 'USD', 20 => 'USD'],
+                'convert' => 20000
+            ])
+        ))->transfer(10, 20, 20000, 'own');
+
     }
 }

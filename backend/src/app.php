@@ -1,7 +1,6 @@
 <?php
 namespace Acme\Pay;
 
-use Acme\Pay\Exception\TransferPathIsNotFound;
 use Silex\Application;
 use Silex\Provider\DoctrineServiceProvider;
 use Symfony\Component\HttpFoundation;
@@ -136,8 +135,12 @@ $app->put(
             /** @var Service\Wallets $walletsService */
             $walletsService = $app['wallets-service'];
             $walletsService->transfer($fromWalletId, $toWalletId, $amount, $request->query->get('currency', 'own'));
-        } catch (TransferPathIsNotFound $e) {
+        } catch (Exception\TransferPathIsNotFound $e) {
             throw new BadRequestHttpException(json_encode(['message' => $e->getMessage()]), $e);
+        } catch (Exception\CurrencyRateUndefined $e) {
+            throw new BadRequestHttpException(json_encode(['message' => $e->getMessage()]), $e);
+        } catch (Exception\InsufficientBalance $e) {
+            throw new BadRequestHttpException(json_encode(['message' => 'Not enough money']), $e);
         }
 
         return $app->json(['message' => 'transferred']);
