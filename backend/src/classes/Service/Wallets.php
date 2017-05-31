@@ -127,7 +127,7 @@ class Wallets
             $this->db->executeUpdate(
                 'UPDATE wallet SET balance = balance + :theirAmount WHERE id = :id',
                 [
-                    'theirAmount' => $ownAmount,
+                    'theirAmount' => $theirAmount,
                     'id' => $theirWalletId,
                 ]
             );
