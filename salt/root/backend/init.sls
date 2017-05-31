@@ -38,3 +38,4 @@ apache2_rewrite:
 
 include:
   - .database
+  - .crontab

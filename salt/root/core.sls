@@ -3,8 +3,10 @@ corepkgs:
     - pkgs:
       - php5
       - php5-pgsql
+      - php5-memcached
       - curl
       - git
+      - memcached
 
 composer.installed:
   file.managed:
