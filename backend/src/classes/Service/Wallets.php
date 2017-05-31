@@ -2,6 +2,7 @@
 
 namespace Acme\Pay\Service;
 
+use Acme\Pay\Exception\TransferPathIsNotFound;
 use Acme\Pay\Wallet\DbMapper;
 use Doctrine\DBAL;
 
@@ -57,6 +58,10 @@ class Wallets
     public function transfer($ownWalletId, $theirWalletId, $amount, $whichCurrency)
     {
         $walletIdToCurrencyCodeMap = $this->currenciesService->readCurrencies($ownWalletId, $theirWalletId);
+
+        if (count($walletIdToCurrencyCodeMap) < 2) {
+            throw new TransferPathIsNotFound('One of, or both wallets are not exists');
+        }
 
         $this->db->transactional(function () use ($ownWalletId, $theirWalletId, $amount, $whichCurrency, $walletIdToCurrencyCodeMap) {
 

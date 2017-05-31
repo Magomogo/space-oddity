@@ -2,6 +2,7 @@
 
 namespace Acme\Pay\Service;
 
+use Acme\Pay\Exception\TransferPathIsNotFound;
 use Acme\Pay\Test;
 use Mockery as m;
 
@@ -50,6 +51,18 @@ JSON
             m::mock([
                 'readCurrencies' => [10 => 'USD', 20 => 'USD'],
                 'convert' => 20000
+            ])
+        ))->transfer(10, 20, 20000, 'own');
+    }
+
+    public function testThrowsWhenOneOfBothWalletsAreNotFound()
+    {
+        $this->expectException(TransferPathIsNotFound::class);
+
+        (new Wallets(
+            m::mock(),
+            m::mock([
+                'readCurrencies' => [],
             ])
         ))->transfer(10, 20, 20000, 'own');
     }
