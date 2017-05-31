@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7e10c77b01031a0ba37be0d4c6dc7f97",
+    "content-hash": "601b5c9a801a0e2d02b9d697da941c7e",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1359,7 +1359,7 @@
         },
         {
             "name": "tedivm/stash",
-            "version": "dev-master",
+            "version": "v0.14.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tedious/Stash.git",
@@ -3011,9 +3011,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "tedivm/stash": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
