@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 $app = new Application();
+$app->register(new ServiceProvider\CacheServiceProvider());
 $app->register(new ServiceProvider\JsonValidatorServiceProvider());
 $app->register(new ServiceProvider\EntitiesServiceProvider());
 $app->register(new DoctrineServiceProvider(), array(

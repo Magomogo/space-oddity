@@ -22,6 +22,7 @@ class Currencies
 
     /**
      * @param DBAL\Connection $db
+     * @param null|Pool $cache
      */
     public function __construct($db, $cache = null)
     {
