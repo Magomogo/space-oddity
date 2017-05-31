@@ -1,6 +1,7 @@
 <?php
 namespace Acme\Pay;
 
+use Doctrine\DBAL\Connection;
 use Silex\Application;
 use Silex\Provider\DoctrineServiceProvider;
 use Symfony\Component\HttpFoundation;
@@ -15,6 +16,11 @@ $app->register(new DoctrineServiceProvider(), array(
         'url'   => 'pgsql://acmepay:acmepay@127.0.0.1/acmepay',
     ),
 ));
+
+$app->before(function () use ($app) {
+    // default, but let's document it
+    $app['db']->setTransactionIsolation(Connection::TRANSACTION_READ_COMMITTED);
+});
 
 $app->get('/', function () {
     return '<h1>Welcome to ACME pay!</h1>';
