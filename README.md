@@ -31,6 +31,19 @@ Take your protein pills and put your helmet on
 
     curl -X POST http://acmepay.local/client/John%20Doe/wallet/USD?balance=10000
 
+## Define a currency rate
+
+    curl -X POST http://acmepay.local/currency/USD/rate/1?date=2017-06-04
+
+## Transfer some money
+
+    curl -X PUT http://acmepay.local/wallet/2/transfer-to/1/amount/100
+
+## Get list of transactions
+
+    curl http://acmepay.local/client/John%20Doe/wallet/transactions
+    curl -H 'accept: application/json'  acmepay.local/client/John/wallet/transactions
+
 # Development
 
 Start the VM:
