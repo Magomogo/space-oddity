@@ -11,13 +11,11 @@ before_script:
   - psql -U postgres -c 'CREATE DATABASE "acmepay"'
   - bash ./salt/root/backend/database_schema_install.sh
   - psql -U postgres -c "CREATE ROLE \"acmepay\" WITH INHERIT SUPERUSER LOGIN ENCRYPTED PASSWORD 'md5b74940eeab7ef7198859cebd427d0f51'"
+  - sudo /home/travis/.phpenv/shims/php -S 127.0.0.1:80 -t ./www/ 2>/dev/null &
 
 install:
   - cd ./backend
   - composer install
-
-before_script:
-  - sudo /home/travis/.phpenv/shims/php -S 127.0.0.1:80 -t ./www/ 2>/dev/null &
 
 script:
   - ./vendor/bin/phpunit
