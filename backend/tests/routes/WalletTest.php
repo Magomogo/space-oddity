@@ -4,7 +4,6 @@ namespace Acme\Pay\Routes;
 
 use Mockery as m;
 use Acme\Pay\Test;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class WalletTest extends Test\WebTestCase
 {

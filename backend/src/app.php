@@ -1,6 +1,7 @@
 <?php
 namespace Acme\Pay;
 
+use function Acme\Pay\Asserts\assertValidDate;
 use Doctrine\DBAL\Connection;
 use Silex\Application;
 use Silex\Provider\DoctrineServiceProvider;
@@ -51,6 +52,33 @@ $app->post('/client', function (HttpFoundation\Request $request) use ($app) {
 
 });
 
+$app->get(
+    '/client/{clientName}/wallet/transactions',
+    function ($clientName, HttpFoundation\Request $request) use ($app) {
+
+        /** @var Service\Clients $clientsService */
+        $clientsService = $app['clients-service'];
+        try {
+            $client = $clientsService->getByName($clientName);
+        } catch (Exception\ClientDoesNotExists $e) {
+            throw new BadRequestHttpException(json_encode(['message' => $e->getMessage()]));
+        }
+
+        /** @var Service\Transactions $transactionsService */
+        $transactionsService = $app['transactions-service'];
+
+        return $app->json($transactionsService->sortedList(
+            $client,
+            (int)$request->query->get('offset', 0),
+            (int)$request->query->get('limit', 10),
+            [
+                'startDate' => assertValidDate($request->get('startDate')),
+                'endDate' => assertValidDate($request->get('endDate')),
+            ]
+        ));
+    }
+);
+
 $app->post(
     '/client/{clientName}/wallet/{currencyCode}',
     function ($clientName, $currencyCode, HttpFoundation\Request $request) use ($app) {
@@ -96,11 +124,7 @@ $app->post('/currency/{code}/rate/{rate}', function ($code, $rate, HttpFoundatio
     }
 
     if ($request->query->has('date')) {
-        try {
-            $date = (new \DateTime($request->get('date')))->format('Y-m-d');
-        } catch (\Exception $e) {
-            throw new BadRequestHttpException(json_encode(['message' => 'Invalid date']));
-        }
+        $date = assertValidDate($request->get('date'));
     } else {
         $date = (new \DateTime('tomorrow'))->format('Y-m-d');
     }

@@ -25,7 +25,10 @@
     "autoload": {
         "psr-4": {
             "Acme\\Pay\\": "src/classes"
-        }
+        },
+        "files": [
+            "./src/functions/asserts.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
