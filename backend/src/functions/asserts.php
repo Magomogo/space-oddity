@@ -6,15 +6,20 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * @param string $string
- * @return string date in YYYY-MM-DD
+ * @return string|null date in YYYY-MM-DD
  */
-function assertValidDate($string)
+function assertValidDateOrNull($string)
 {
-    try {
-        $date = (new \DateTime($string))->format('Y-m-d');
-    } catch (\Exception $e) {
-        throw new BadRequestHttpException(json_encode(['message' => 'Invalid date']));
+    if (strlen($string)) {
+
+        try {
+            $date = (new \DateTime($string))->format('Y-m-d');
+        } catch (\Exception $e) {
+            throw new BadRequestHttpException(json_encode(['message' => 'Invalid date']));
+        }
+
+        return $date;
     }
 
-    return $date;
+    return null;
 }

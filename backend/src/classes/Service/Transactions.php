@@ -121,6 +121,8 @@ class Transactions
      */
     public function sortedList($client, $filters)
     {
+        $andFilterWhere = $this->filterWhereClause($filters);
+
         $list = $this->db->fetchAll(<<<SQL
 SELECT
   t.id as transaction_id,
@@ -136,7 +138,7 @@ FROM wallet w
   INNER JOIN transaction t ON (transfer.transaction_id = t.id)
   INNER JOIN client c ON (c.id = w.client_id)
 WHERE
-  c.id = :clientId
+  c.id = :clientId $andFilterWhere
 ORDER BY t.timestamp DESC 
 SQL
             ,
@@ -157,14 +159,26 @@ SQL
      */
     public function summary($client, $filters)
     {
+        $andFilterWhere = $this->filterWhereClause($filters);
+
         list($sum, $ownCurrency) = $this->db->fetchArray(<<<SQL
-SELECT sum(transfer.amount), w.currency
+SELECT sum(transfer.amount) as sum, w.currency, 1 as sort
 FROM
   wallet w
   INNER JOIN transfer ON (transfer.wallet_id = w.id)
+  INNER JOIN transaction t ON (transfer.transaction_id = t.id)
+WHERE
+  w.client_id = :clientId $andFilterWhere
+GROUP BY w.client_id, w.currency
+
+UNION
+
+SELECT '0' as sum, w.currency, 2 as sort
+FROM wallet w
 WHERE
   w.client_id = :clientId
-GROUP BY w.client_id, w.currency
+
+ORDER BY sort
 SQL
             ,
             ['clientId' => $client->id]
@@ -174,5 +188,20 @@ SQL
             ['currency' => 'USD', 'sum' => $this->currenciesService->convert($sum, $ownCurrency, 'USD')],
             ['currency' => $ownCurrency, 'sum' => $sum]
         ];
+    }
+
+    private function filterWhereClause($filter)
+    {
+        $clause = [];
+
+        if (isset($filter['startDate'])) {
+            $clause[] = "(t.timestamp >= to_timestamp('" . $filter['startDate'] . " 00:00:00', 'YYYY-MM-DD HH24:MI:SS'))";
+        }
+
+        if (isset($filter['endDate'])) {
+            $clause[] = "(t.timestamp <= to_timestamp('" . $filter['endDate'] . " 23:59:59', 'YYYY-MM-DD HH24:MI:SS'))";
+        }
+
+        return count($clause) ? ' AND ' . implode(' AND ', $clause) : '';
     }
 }

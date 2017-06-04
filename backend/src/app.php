@@ -1,7 +1,7 @@
 <?php
 namespace Acme\Pay;
 
-use function Acme\Pay\Asserts\assertValidDate;
+use function Acme\Pay\Asserts\assertValidDateOrNull;
 use function Acme\Pay\Conversions\transactionToCsv;
 use Doctrine\DBAL\Connection;
 use Silex\Application;
@@ -70,8 +70,8 @@ $app->get(
         $list = $transactionsService->sortedList(
             $client,
             [
-                'startDate' => assertValidDate($request->get('startDate')),
-                'endDate' => assertValidDate($request->get('endDate')),
+                'startDate' => assertValidDateOrNull($request->get('startDate')),
+                'endDate' => assertValidDateOrNull($request->get('endDate')),
             ]
         );
 
@@ -108,8 +108,8 @@ $app->get(
         return $app->json($transactionsService->summary(
             $client,
             [
-                'startDate' => assertValidDate($request->get('startDate')),
-                'endDate' => assertValidDate($request->get('endDate')),
+                'startDate' => assertValidDateOrNull($request->get('startDate')),
+                'endDate' => assertValidDateOrNull($request->get('endDate')),
             ]
         ));
     }
@@ -160,7 +160,7 @@ $app->post('/currency/{code}/rate/{rate}', function ($code, $rate, HttpFoundatio
     }
 
     if ($request->query->has('date')) {
-        $date = assertValidDate($request->get('date'));
+        $date = assertValidDateOrNull($request->get('date'));
     } else {
         $date = (new \DateTime('tomorrow'))->format('Y-m-d');
     }
