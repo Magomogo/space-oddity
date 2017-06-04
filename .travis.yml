@@ -4,6 +4,14 @@ language: php
 php:
   - '5.6'
 
+services:
+  - postgresql
+
+before_script:
+  - psql -U postgres -c 'CREATE DATABASE "acmepay"'
+  - bash ./salt/root/backend/database_schema_install.sh
+  - psql -U postgres -c "CREATE ROLE \"acmepay\" WITH INHERIT SUPERUSER LOGIN ENCRYPTED PASSWORD 'md5b74940eeab7ef7198859cebd427d0f51'"
+
 install:
   - cd ./backend
   - composer install
