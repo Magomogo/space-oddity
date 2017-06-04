@@ -4,6 +4,7 @@ namespace Acme\Pay\Schema;
 
 use Acme\Pay\Test\SchemaTestCase;
 use Acme\Pay\Test;
+use Acme\Pay\Types;
 
 class ClientTest extends SchemaTestCase
 {
@@ -41,4 +42,13 @@ JSON
         self::assertValid($client);
     }
 
+    public function testClientTypeFunctionGivesValidData()
+    {
+        self::assertValid(Types\client([
+            'id' => 88,
+            'name' => 'Maxim',
+            'city' => 'Novosibirsk',
+            'country' => 'Russia' ,
+        ]));
+    }
 }

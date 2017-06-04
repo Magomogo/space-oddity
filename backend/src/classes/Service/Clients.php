@@ -5,6 +5,7 @@ namespace Acme\Pay\Service;
 use Acme\Pay\Client\DbMapper;
 use Acme\Pay\Exception;
 use Doctrine\DBAL;
+use Acme\Pay\Types;
 
 class Clients
 {
@@ -50,12 +51,6 @@ class Clients
             throw new Exception\ClientDoesNotExists('Client ' . $name . ' does not exists');
         }
 
-        $client = new \stdClass();
-        $client->id = (int)$row['id'];
-        $client->name = $row['name'];
-        ($row['city'] !== null) && $client->city = $row['city'];
-        ($row['country'] !== null) && $client->country = $row['country'];
-
-        return $client;
+        return Types\client($row);
     }
 }
