@@ -2,6 +2,7 @@
 namespace Acme\Pay;
 
 use function Acme\Pay\Asserts\assertValidDate;
+use function Acme\Pay\Conversions\transactionToCsv;
 use Doctrine\DBAL\Connection;
 use Silex\Application;
 use Silex\Provider\DoctrineServiceProvider;
@@ -66,14 +67,22 @@ $app->get(
 
         /** @var Service\Transactions $transactionsService */
         $transactionsService = $app['transactions-service'];
-
-        return $app->json($transactionsService->sortedList(
+        $list = $transactionsService->sortedList(
             $client,
             [
                 'startDate' => assertValidDate($request->get('startDate')),
                 'endDate' => assertValidDate($request->get('endDate')),
             ]
-        ));
+        );
+
+        return in_array($request->headers->get('accept', 'text/csv'),  ['text/csv', '*/*'], true) ?
+            $app->stream(function () use ($list) {
+                foreach ($list as $idx => $transaction) {
+                    echo transactionToCsv($transaction, $idx === 0);
+                }
+            })
+            :
+            $app->json($list);
     }
 );
 
