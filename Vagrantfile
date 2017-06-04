@@ -20,4 +20,8 @@ Vagrant.configure("2") do |config|
     salt.minion_config = "minion.conf"
     salt.run_highstate = true
   end
+
+  config.vm.synced_folder ".", "/vagrant", type: "rsync",
+    rsync__exclude: [".git/", "backend/vendor"]
+
 end
