@@ -3,5 +3,5 @@
     "id": "http://acmepay.local/schema/currency.json#",
 
     "type": "string",
-    "enum": ["EUR", "USD", "RUR"]
+    "enum": ["EUR", "USD", "RUB"]
 }

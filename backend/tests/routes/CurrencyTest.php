@@ -28,7 +28,7 @@ class CurrencyTest extends Test\WebTestCase
     public function testRateShouldBeNotZero()
     {
         $client = $this->createClient();
-        $client->request('POST', '/currency/RUR/rate/0');
+        $client->request('POST', '/currency/RUB/rate/0');
 
         $this->assertSame(400, $client->getResponse()->getStatusCode());
     }

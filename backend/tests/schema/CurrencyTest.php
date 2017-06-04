@@ -22,7 +22,7 @@ class CurrencyTest extends SchemaTestCase
         return [
             ['USD'],
             ['EUR'],
-            ['RUR'],
+            ['RUB'],
         ];
     }
 

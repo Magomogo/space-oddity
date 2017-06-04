@@ -14,7 +14,7 @@ CREATE TABLE currency (
     code CHAR(3) PRIMARY KEY
 );
 
-INSERT INTO currency VALUES('USD'), ('EUR'), ('RUR');
+INSERT INTO currency VALUES('USD'), ('EUR'), ('RUB');
 
 CREATE TABLE currency_rates (
     \"date\" DATE,

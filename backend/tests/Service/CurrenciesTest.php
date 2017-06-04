@@ -12,11 +12,11 @@ class CurrenciesTest extends \PHPUnit_Framework_TestCase
         $db = m::mock();
         $db->shouldReceive('insert')->with('currency_rates', [
             'date' => '2017-09-09',
-            'code' => 'RUR',
+            'code' => 'RUB',
             'rate' =>  0.017694
         ])->once();
 
-        (new Currencies($db))->defineRate('RUR', 0.017694, '2017-09-09');
+        (new Currencies($db))->defineRate('RUB', 0.017694, '2017-09-09');
     }
 
     public function testCanConvertDollarsIntoEurs()
@@ -37,10 +37,10 @@ class CurrenciesTest extends \PHPUnit_Framework_TestCase
         $db = m::mock([
             'fetchAll' => [
                 ['code' => 'EUR', 'rate' => 0.894434],
-                ['code' => 'RUR', 'rate' => 56.57]
+                ['code' => 'RUB', 'rate' => 56.57]
             ]
         ]);
-        $amountInEur = (new Currencies($db))->convert(10000, 'RUR', 'EUR');
+        $amountInEur = (new Currencies($db))->convert(10000, 'RUB', 'EUR');
 
         $this->assertSame(158, $amountInEur);
     }
@@ -49,7 +49,7 @@ class CurrenciesTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(CurrencyRateUndefined::class);
 
-        (new Currencies(m::mock(['fetchAll' => []])))->convert(10000, 'RUR', 'EUR');
+        (new Currencies(m::mock(['fetchAll' => []])))->convert(10000, 'RUB', 'EUR');
     }
 
     public function testUsesProvidedCacheObject()
@@ -59,12 +59,12 @@ class CurrenciesTest extends \PHPUnit_Framework_TestCase
                 'expiresAfter' => null,
                 'get' => [
                     'EUR' => 0.894434,
-                    'RUR' => 56.57
+                    'RUB' => 56.57
                 ],
                 'isHit' => true
             ])
         ]);
 
-        (new Currencies(m::mock(), $cache))->convert(10000, 'RUR', 'EUR');
+        (new Currencies(m::mock(), $cache))->convert(10000, 'RUB', 'EUR');
     }
 }

@@ -19,7 +19,7 @@ class TransactionTest extends SchemaTestCase
         $transaction->wallet->client = Data::johnDoeFromSanFrancisco(23);
         $transaction->wallet->currency = 'USD';
         $transaction->wallet->balance = 10091;
-        $transaction->currency = 'RUR';
+        $transaction->currency = 'RUB';
         $transaction->amount = -128;
 
         self::assertValid($transaction);
