@@ -58,19 +58,27 @@ class Currencies
      * @param integer $walletId1
      * @param integer $walletId2
      * @return array wallet id to currency code map
+     * @throws \InvalidArgumentException
      */
     public function readCurrencies($walletId1, $walletId2)
     {
-        $list = $this->db->fetchAll(
-            'SELECT id, currency FROM wallet WHERE id IN (?)',
-            [[$walletId1, $walletId2]],
-            [DBAL\Connection::PARAM_INT_ARRAY]
-        );
+        $dbFetchFunction = function () use ($walletId1, $walletId2) {
+            $list = $this->db->fetchAll(
+                'SELECT id, currency FROM wallet WHERE id IN (?)',
+                [[$walletId1, $walletId2]],
+                [DBAL\Connection::PARAM_INT_ARRAY]
+            );
 
-        return array_combine(
-            array_column($list, 'id'),
-            array_column($list, 'currency')
-        );
+            return array_combine(
+                array_column($list, 'id'),
+                array_column($list, 'currency')
+            );
+        };
+
+        return $this->cache ?
+            $this->invokeCache($dbFetchFunction, 'acmepay/wallet-currencies/' . $walletId1 . '-' . $walletId2)
+            :
+            $dbFetchFunction();
     }
 
     public function convert($amount, $currency, $targetCurrency)
