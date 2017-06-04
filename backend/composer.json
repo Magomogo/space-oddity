@@ -28,7 +28,8 @@
         },
         "files": [
             "./src/functions/asserts.php",
-            "./src/functions/types.php"
+            "./src/functions/types.php",
+            "./src/functions/conversions.php"
         ]
     },
     "autoload-dev": {
