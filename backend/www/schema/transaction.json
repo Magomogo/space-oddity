@@ -8,8 +8,9 @@
         "timestamp": {"type": "date-time"},
         "wallet": {"$ref": "http://acmepay.local/schema/wallet.json#"},
         "currency": {"$ref": "http://acmepay.local/schema/currency.json#"},
-        "amount": {"type": "integer"}
+        "amount": {"type": "integer"},
+        "balance_change": {"type": "integer"}
     },
-    "required": ["id", "timestamp", "amount"],
+    "required": ["id", "timestamp", "amount", "balance_change"],
     "additionalProperties": false
 }

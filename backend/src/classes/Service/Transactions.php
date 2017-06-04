@@ -5,6 +5,7 @@ namespace Acme\Pay\Service;
 use Acme\Pay\Exception\InsufficientBalance;
 use Acme\Pay\Exception\TransferPathIsNotFound;
 use Doctrine\DBAL;
+use Acme\Pay\Types;
 
 class Transactions
 {
@@ -122,6 +123,36 @@ class Transactions
      */
     public function sortedList($client, $offset, $limit, $filters)
     {
-        return [];
+        $list = $this->db->fetchAll(<<<SQL
+SELECT
+  t.id as transaction_id,
+  t.timestamp as transaction_timestamp,
+  t.currency as transaction_currency,
+  t.amount as transaction_amount,
+  transfer.amount as transfer_amount,
+  w.id as wallet_id,
+  w.currency as wallet_currency,
+  w.balance as wallet_balance
+FROM wallet w
+  INNER JOIN transfer ON (transfer.wallet_id = w.id)
+  INNER JOIN transaction t ON (transfer.transaction_id = t.id)
+  INNER JOIN client c ON (c.id = w.client_id)
+WHERE
+  c.id = :clientId
+ORDER BY t.timestamp DESC 
+LIMIT :limit
+OFFSET :offset
+SQL
+            ,
+            [
+                'clientId' => $client->id,
+                'limit' => $limit,
+                'offset' => $offset,
+            ]
+        );
+
+        return array_map(function ($row) use ($client) {
+            return Types\transaction($row, $client);
+        }, $list);
     }
 }

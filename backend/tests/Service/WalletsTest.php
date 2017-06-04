@@ -21,6 +21,7 @@ class WalletsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(
             <<<JSON
 {
+    "id": 2,
     "client": {
         "name": "John Doe",
         "city": "San Francisco",
@@ -28,8 +29,7 @@ class WalletsTest extends \PHPUnit_Framework_TestCase
         "id": 42
     },
     "currency": "USD",
-    "balance": 1000,
-    "id": 2
+    "balance": 1000
 }
 JSON
             ,

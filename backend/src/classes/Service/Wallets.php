@@ -4,6 +4,8 @@ namespace Acme\Pay\Service;
 
 use Doctrine\DBAL;
 use Acme\Pay\Wallet\DbMapper;
+use Acme\Pay\Types;
+use Mockery\Matcher\Type;
 
 class Wallets
 {
@@ -36,10 +38,11 @@ class Wallets
      */
     public function create($client, $currency, $balance)
     {
-        $wallet = new \stdClass();
-        $wallet->client = $client;
-        $wallet->currency = $currency;
-        $wallet->balance = $balance;
+        $wallet = Types\wallet([
+            'id' => null,
+            'currency' => $currency,
+            'balance' => $balance,
+        ], $client);
 
         $this->db->insert('wallet', (new DbMapper($wallet))->walletTableRow());
         $wallet->id = (int)$this->db->lastInsertId('wallet_id_seq');
