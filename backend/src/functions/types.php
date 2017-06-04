@@ -3,7 +3,7 @@
 namespace Acme\Pay\Types;
 
 /**
- * @param $dbRow
+ * @param array $dbRow
  * @return \stdClass http://acmepay.local/schema/client.json
  */
 function client($dbRow)
@@ -17,6 +17,12 @@ function client($dbRow)
     return $client;
 }
 
+/**
+ * @param array $dbRow
+ * @param \stdClass $client http://acmepay.local/schema/client.json
+ * @param string $columnNamesPrefix
+ * @return \stdClass http://acmepay.local/schema/wallet.json
+ */
 function wallet($dbRow, $client, $columnNamesPrefix = '')
 {
     $wallet = new \stdClass();
@@ -28,6 +34,11 @@ function wallet($dbRow, $client, $columnNamesPrefix = '')
     return $wallet;
 }
 
+/**
+ * @param array $dbRow
+ * @param \stdClass $client http://acmepay.local/schema/client.json
+ * @return \stdClass http://acmepay.local/schema/transaction.json
+ */
 function transaction($dbRow, $client)
 {
     $t = new \stdClass();
