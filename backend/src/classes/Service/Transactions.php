@@ -116,12 +116,10 @@ class Transactions
 
     /**
      * @param \stdClass $client http://acmepay.local/schema/client.json
-     * @param integer $limit
-     * @param integer $offset
      * @param array $filters
      * @return array
      */
-    public function sortedList($client, $offset, $limit, $filters)
+    public function sortedList($client, $filters)
     {
         $list = $this->db->fetchAll(<<<SQL
 SELECT
@@ -140,14 +138,10 @@ FROM wallet w
 WHERE
   c.id = :clientId
 ORDER BY t.timestamp DESC 
-LIMIT :limit
-OFFSET :offset
 SQL
             ,
             [
                 'clientId' => $client->id,
-                'limit' => $limit,
-                'offset' => $offset,
             ]
         );
 

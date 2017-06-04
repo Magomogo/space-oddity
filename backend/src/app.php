@@ -69,8 +69,6 @@ $app->get(
 
         return $app->json($transactionsService->sortedList(
             $client,
-            (int)$request->query->get('offset', 0),
-            (int)$request->query->get('limit', 10),
             [
                 'startDate' => assertValidDate($request->get('startDate')),
                 'endDate' => assertValidDate($request->get('endDate')),
