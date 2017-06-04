@@ -44,6 +44,10 @@ Take your protein pills and put your helmet on
     curl http://acmepay.local/client/John%20Doe/wallet/transactions
     curl -H 'accept: application/json'  acmepay.local/client/John/wallet/transactions
 
+## Get a wallet summary
+
+    curl http://acmepay.local/client/John%20Doe/wallet/summary
+
 # Development
 
 Start the VM:

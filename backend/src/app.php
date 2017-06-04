@@ -76,13 +76,42 @@ $app->get(
         );
 
         return in_array($request->headers->get('accept', 'text/csv'),  ['text/csv', '*/*'], true) ?
-            $app->stream(function () use ($list) {
-                foreach ($list as $idx => $transaction) {
-                    echo transactionToCsv($transaction, $idx === 0);
-                }
-            })
+            $app->stream(
+                function () use ($list) {
+                    foreach ($list as $idx => $transaction) {
+                        echo transactionToCsv($transaction, $idx === 0);
+                    }
+                },
+                200,
+                ['Content-Type' => 'text/csv; charset=UTF-8']
+            )
             :
             $app->json($list);
+    }
+);
+
+$app->get(
+    '/client/{clientName}/wallet/summary',
+    function ($clientName, HttpFoundation\Request $request) use ($app) {
+
+        /** @var Service\Clients $clientsService */
+        $clientsService = $app['clients-service'];
+        try {
+            $client = $clientsService->getByName($clientName);
+        } catch (Exception\ClientDoesNotExists $e) {
+            throw new BadRequestHttpException(json_encode(['message' => $e->getMessage()]));
+        }
+
+        /** @var Service\Transactions $transactionsService */
+        $transactionsService = $app['transactions-service'];
+
+        return $app->json($transactionsService->summary(
+            $client,
+            [
+                'startDate' => assertValidDate($request->get('startDate')),
+                'endDate' => assertValidDate($request->get('endDate')),
+            ]
+        ));
     }
 );
 

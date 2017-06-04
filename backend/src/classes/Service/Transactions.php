@@ -149,4 +149,30 @@ SQL
             return Types\transaction($row, $client);
         }, $list);
     }
+
+    /**
+     * @param \stdClass $client http://acmepay.local/schema/client.json
+     * @param array $filters
+     * @return array
+     */
+    public function summary($client, $filters)
+    {
+        list($sum, $ownCurrency) = $this->db->fetchArray(<<<SQL
+SELECT sum(transfer.amount), w.currency
+FROM
+  wallet w
+  INNER JOIN transfer ON (transfer.wallet_id = w.id)
+WHERE
+  w.client_id = :clientId
+GROUP BY w.client_id, w.currency
+SQL
+            ,
+            ['clientId' => $client->id]
+        );
+
+        return [
+            ['currency' => 'USD', 'sum' => $this->currenciesService->convert($sum, $ownCurrency, 'USD')],
+            ['currency' => $ownCurrency, 'sum' => $sum]
+        ];
+    }
 }

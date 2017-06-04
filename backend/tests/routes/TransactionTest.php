@@ -48,4 +48,17 @@ class TransactionTest extends Test\WebTestCase
         $this->assertSame(200, $client->getResponse()->getStatusCode());
         $this->assertSame('text/csv; charset=UTF-8', $client->getResponse()->headers->get('content-type'));
     }
+
+    public function testProvidesWalletSummary()
+    {
+        $this->app['clients-service'] = m::mock(['getByName' => Test\Data::johnDoeFromSanFrancisco()]);
+        $this->app['transactions-service'] = m::mock(['summary' => []]);
+
+        $client = $this->createClient();
+        $client->request('GET', '/client/John/wallet/summary');
+
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
+        $this->assertSame('application/json', $client->getResponse()->headers->get('content-type'));
+        $this->assertJson($client->getResponse()->getContent());
+    }
 }
