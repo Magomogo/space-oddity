@@ -138,9 +138,9 @@ $app->put(
         }
 
         try {
-            /** @var Service\Wallets $walletsService */
-            $walletsService = $app['wallets-service'];
-            $walletsService->transfer($fromWalletId, $toWalletId, $amount, $request->query->get('currency', 'own'));
+            /** @var Service\Transactions $transactionsService */
+            $transactionsService = $app['transactions-service'];
+            $transactionsService->create($fromWalletId, $toWalletId, $amount, $request->query->get('currency', 'own'));
         } catch (Exception\TransferPathIsNotFound $e) {
             throw new BadRequestHttpException(json_encode(['message' => $e->getMessage()]), $e);
         } catch (Exception\CurrencyRateUndefined $e) {

@@ -31,9 +31,9 @@ class WalletTest extends Test\WebTestCase
 
     public function testTransferRouteIsExists()
     {
-        $walletsService = m::mock();
-        $walletsService->shouldReceive('transfer')->once();
-        $this->app['wallets-service'] = $walletsService;
+        $transactionService = m::mock();
+        $transactionService->shouldReceive('create')->once();
+        $this->app['transactions-service'] = $transactionService;
 
         $client = $this->createClient();
         $client->request('PUT', '/wallet/1/transfer-to/2/amount/10000?currency=own');
@@ -59,7 +59,7 @@ class WalletTest extends Test\WebTestCase
 
     public function testCurrencyParameterGetsValidated()
     {
-        $this->app['wallets-service'] = m::mock(['transfer' => null]);
+        $this->app['transactions-service'] = m::mock(['create' => null]);
 
         $client = $this->createClient();
         $client->request('PUT', '/wallet/1/transfer-to/2/amount/10000?currency=their');
