@@ -4,3 +4,4 @@ base:
     - nodejs
     - environment
     - backend
+    - frontend
