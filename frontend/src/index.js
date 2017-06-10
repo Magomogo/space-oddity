@@ -1,11 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import HelloWorld from './components/HelloWorld';
 import 'bootstrap/dist/css/bootstrap.css';
+import { Grid, PageHeader } from 'react-bootstrap';
+
+import TheApplication from './components/TheApplication';
 
 ReactDOM.render(
-    <h1>
-        <HelloWorld/>
-    </h1>,
+    <Grid>
+        <PageHeader>
+            ACME Pay
+            <small>...the ultimate payment system you ever need</small>
+        </PageHeader>
+        <TheApplication/>
+    </Grid>,
     document.getElementById('root')
 );
