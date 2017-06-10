@@ -2,13 +2,14 @@
   "name": "frontend",
   "version": "0.0.1",
   "description": "GUI for acmepay",
+  "repository": "https://github.com/Magomogo/space-oddity",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server",
     "build": "webpack"
   },
-  "author": "",
+  "author": "Maxim Gnatenko <mgnatenko@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "babel-core": "^6.25.0",
@@ -17,7 +18,9 @@
     "babel-preset-react": "^6.24.1",
     "bootstrap": "^3.3.7",
     "css-loader": "^0.28.4",
+    "es6-promise": "^4.1.0",
     "file-loader": "^0.11.2",
+    "isomorphic-fetch": "^2.2.1",
     "react": "^15.5.4",
     "react-bootstrap": "^0.31.0",
     "react-dom": "^15.5.4",

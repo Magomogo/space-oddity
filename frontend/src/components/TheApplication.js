@@ -11,18 +11,19 @@ export default class TheApplication extends React.Component {
     }
 
     componentDidMount() {
-        this.setState(
-            {
-                transactions: [
+        this.props
+            .fetch(
+                'http://acmepay.local/client/John/wallet/transactions',
+                {headers: {Accept: 'application/json'}}
+            )
+            .then(response => response.json())
+            .then((transactions) => {
+                this.setState(
                     {
-                        id: 1,
-                    },
-                    {
-                        id: 2,
+                        transactions: transactions
                     }
-                ]
-            }
-        );
+                );
+            });
     }
 
     render() {
