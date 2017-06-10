@@ -3,21 +3,31 @@ import { Table } from 'react-bootstrap';
 
 import Transaction from './Transaction';
 
-export default () => (
-    <Table striped bordered condensed hover>
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Client</th>
-            <th>Timestamp</th>
-            <th>Amount</th>
-            <th>Balance change</th>
-        </tr>
-        </thead>
-        <tbody>
-            <Transaction/>
-            <Transaction/>
-            <Transaction/>
-        </tbody>
-    </Table>
-);
+export default (props) => {
+
+    const {listOfTransactions} = props;
+
+    return (
+        <Table striped bordered condensed hover>
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Client</th>
+                <th>Timestamp</th>
+                <th>Amount</th>
+                <th>Balance change</th>
+            </tr>
+            </thead>
+            <tbody>
+            {
+                listOfTransactions.map(
+                    (t) => <Transaction key={t.id} transaction={t}/>
+                )
+            }
+            {
+                listOfTransactions.length ? '' : (<tr><td colSpan={5} className="text-center">nothing here</td></tr>)
+            }
+            </tbody>
+        </Table>
+    );
+}
