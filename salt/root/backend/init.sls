@@ -15,6 +15,14 @@ apache2_rewrite:
     - require_in:
       - service: apache2
 
+apache2_headers:
+  cmd.run:
+    - name: a2enmod headers ; echo -e "\nChanged=yes\n"
+    - stateful: True
+    - unless: a2enmod -q headers
+    - require_in:
+      - service: apache2
+
 /etc/apache2/sites-available/acmepay.conf:
   file.managed:
     - source: salt://backend/vhost.conf
