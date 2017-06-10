@@ -3,20 +3,35 @@ import React from 'react';
 import SearchForm from './SearchForm';
 import Report from './Report';
 
-const listOfTransactions = [
-    {
-        id: 1,
-    },
-    {
-        id: 2,
+export default class TheApplication extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {transactions: []};
     }
-];
 
+    componentDidMount() {
+        this.setState(
+            {
+                transactions: [
+                    {
+                        id: 1,
+                    },
+                    {
+                        id: 2,
+                    }
+                ]
+            }
+        );
+    }
 
-export default () => (
-    <div>
-        <SearchForm/>
-        <h3>List of transactions</h3>
-        <Report listOfTransactions={listOfTransactions}/>
-    </div>
-);
+    render() {
+        return (
+            <div>
+                <SearchForm/>
+                <h3>List of transactions</h3>
+                <Report listOfTransactions={this.state.transactions}/>
+            </div>
+        );
+    };
+}
