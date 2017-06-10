@@ -1,0 +1,16 @@
+{
+  "name": "frontend",
+  "version": "0.0.1",
+  "description": "GUI for acmepay",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack",
+    "build": "webpack"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "webpack": "^2.6.1"
+  }
+}
