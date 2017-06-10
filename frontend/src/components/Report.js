@@ -20,12 +20,12 @@ export default (props) => {
             </thead>
             <tbody>
             {
-                listOfTransactions.map(
-                    (t) => <Transaction key={t.id} transaction={t}/>
-                )
-            }
-            {
-                listOfTransactions.length ? '' : (<tr><td colSpan={5} className="text-center">nothing here</td></tr>)
+                listOfTransactions.length ?
+                    listOfTransactions.map(
+                        (t) => <Transaction key={t.id} transaction={t}/>
+                    )
+                    :
+                    <tr><td colSpan={5} className="text-center">nothing here</td></tr>
             }
             </tbody>
         </Table>

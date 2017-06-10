@@ -4,7 +4,6 @@ import SearchForm from './SearchForm';
 import Report from './Report';
 
 const listOfTransactions = [
-
     {
         id: 1,
     },
