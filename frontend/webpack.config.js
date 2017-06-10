@@ -1,10 +1,11 @@
-var path = require('path');
+const path = require('path'),
+    wwwRoot = path.join(__dirname, '..', 'www');
 
 module.exports = {
     entry: './src/index.js',
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'www')
+        path: wwwRoot
     },
     module: {
         rules: [
@@ -14,7 +15,7 @@ module.exports = {
         ]
     },
     devServer: {
-        contentBase: path.join(__dirname, "www"),
+        contentBase: wwwRoot,
         compress: true,
         port: 9000
     }

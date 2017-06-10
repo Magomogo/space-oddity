@@ -19,7 +19,7 @@ install:
   - composer install -d ./backend/
 
 before_script:
-  - sudo /home/travis/.phpenv/shims/php -S 127.0.0.1:80 -t ./backend/www/ 2>/dev/null &
+  - sudo /home/travis/.phpenv/shims/php -S 127.0.0.1:80 -t ./www/ 2>/dev/null &
 
 script:
   - ./backend/vendor/bin/phpunit -c ./backend
