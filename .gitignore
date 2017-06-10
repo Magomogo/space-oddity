@@ -3,3 +3,4 @@
 /backend/vendor/
 /frontend/node_modules
 /frontend/www/bundle.js
+npm-debug.log
