@@ -6,10 +6,17 @@ import Money from './Money';
 
 export default (props) => {
 
-    const {listOfTransactions} = props;
+    const {listOfTransactions} = props,
+        wallet = listOfTransactions[0] && listOfTransactions[0].wallet;
 
     return (
         <Table striped bordered condensed hover>
+            {wallet &&
+                <caption>
+                    Transactions wallet #{wallet.id},
+                    {wallet.client.name} from {wallet.client.city}, {wallet.client.country}.
+                    Balance: <b><Money amount={wallet.balance} currency={wallet.currency}/></b>
+                </caption>}
             <thead>
             <tr>
                 <th>#</th>

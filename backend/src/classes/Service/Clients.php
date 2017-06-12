@@ -27,7 +27,7 @@ class Clients
      */
     public function listOfClients()
     {
-        $list = $this->db->fetchAll('SELECT * FROM client');
+        $list = $this->db->fetchAll('SELECT * FROM client ORDER BY name');
 
         return array_map(function ($row) {
             return Types\client($row);
