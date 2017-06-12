@@ -1,11 +1,11 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../backend/vendor/autoload.php';
 
 use Symfony\Component\HttpKernel\Client;
 
-$httpClient = new Client(require __DIR__ . '/../src/app.php');
+$httpClient = new Client(require __DIR__ . '/../backend/src/app.php');
 
 $ensureCurrencyRatesAreDefined = function () use ($httpClient)
 {

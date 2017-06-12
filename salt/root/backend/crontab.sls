@@ -1,4 +1,4 @@
-/vagrant/backend/cli/invalidate-cache.php:
+/vagrant/cli/invalidate-cache.php:
   cron.present:
     - identifier: invalidate-cache-daily
     - user: {{ pillar.user }}
