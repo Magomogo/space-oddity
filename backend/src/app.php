@@ -28,6 +28,14 @@ $app->get('/', function () {
     return '<h1>Welcome to ACME pay!</h1>';
 });
 
+$app->get('/client', function () use ($app) {
+
+    /** @var Service\Clients $clientsService */
+    $clientsService = $app['clients-service'];
+
+    return $app->json($clientsService->listOfClients());
+});
+
 $app->post('/client', function (HttpFoundation\Request $request) use ($app) {
     /** @var Service\JsonValidator $jsonValidator */
     $jsonValidator = $app['data-types-validator'];

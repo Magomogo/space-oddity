@@ -1,5 +1,11 @@
 FORMAT: 1A
 
+# GET /client
+
+Get list of clients
+
++ Response 200 (application/json)
+
 # POST /client
 
 Client registration. Name should be unique since it is in use to identify a client.

@@ -23,6 +23,18 @@ class Clients
     }
 
     /**
+     * @return array of http://acmepay.local/schema/client.json
+     */
+    public function listOfClients()
+    {
+        $list = $this->db->fetchAll('SELECT * FROM client');
+
+        return array_map(function ($row) {
+            return Types\client($row);
+        }, $list);
+    }
+
+    /**
      * @param \stdClass $client http://acmepay.local/schema/client.json
      * @return \stdClass $client http://acmepay.local/schema/client.json
      * @throws Exception\ClientAlreadyExists

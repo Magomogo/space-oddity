@@ -32,4 +32,12 @@ class ClientTest extends Test\WebTestCase
         $this->app['clients-service'] = $clientsService;
         $this->createClient()->request('POST', '/client', [], [], [], '{"name": "John Doe"}');
     }
+
+    public function testListOfClientsRouteSomehowWorks()
+    {
+        $client = $this->createClient();
+        $client->request('GET', '/client');
+
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
+    }
 }
