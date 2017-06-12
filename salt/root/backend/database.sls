@@ -42,3 +42,10 @@ database-schema-is-deployed:
     - source: salt://backend/database_schema_install.sh
     - watch:
       - postgres_database: acmepay
+
+database-is-filled-in:
+  cmd.wait:
+    - name: /vagrant/cli/do-fake-transactions.php
+    - runas: {{ pillar.user }}
+    - watch:
+      - cmd: database-schema-is-deployed
