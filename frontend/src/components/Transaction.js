@@ -1,15 +1,16 @@
 import React from 'react';
 
 export default (props) => {
-    const { transaction } = props;
+    const { transaction } = props,
+        printMoney = (cents) => cents / 100;
 
     return (
         <tr>
             <td>{ transaction.id }</td>
-            <td>John Doe</td>
-            <td>2017-01-01T00:32:22</td>
-            <td>100 USD</td>
-            <td>-5790 RUB</td>
+            <td>{ transaction.wallet.client.name }</td>
+            <td>{ transaction.timestamp }</td>
+            <td>{ printMoney(transaction.amount) } { transaction.currency }</td>
+            <td>{ printMoney(transaction.balance_change)} { transaction.wallet.currency }</td>
         </tr>
     );
 }
