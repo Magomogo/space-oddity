@@ -76,10 +76,8 @@ text/csv is by default.
 
 + Parameters
     + clientName: John (string, mandatory) - Name of a client
-    + limit: 10 (number, optional) - Amount of transactions to provide 
-    + offset: 0 (number, optional) - Offset from the beginning of the list
-    + startDay: 2017-05-01 (string, optional) - Beginning of a period, date in YYYY-MM-DD format
-    + endDay: 2017-05-26 (string, optional) - End of a period, date in YYYY-MM-DD format
+    + startDate: 2017-05-01 (string, optional) - Beginning of a period, date in YYYY-MM-DD format
+    + endDate: 2017-05-26 (string, optional) - End of a period, date in YYYY-MM-DD format
 
 + Headers
     Accept: text/csv, application/json - what content type the client is able to understand.

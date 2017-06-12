@@ -15,19 +15,26 @@ export default class TheApplication extends React.Component {
     }
 
     handleSearch(parameters) {
-        this.props
-            .fetch(
-                'http://acmepay.local/client/' + encodeURIComponent(parameters.client.name) + '/wallet/transactions',
-                {headers: {Accept: 'application/json'}}
-            )
-            .then(response => response.json())
-            .then((transactions) => {
-                this.setState(
-                    {
-                        transactions: transactions
-                    }
-                );
-            });
+        if (parameters.client) {
+            this.props
+                .fetch(
+                    'http://acmepay.local/client/'
+                        + encodeURIComponent(parameters.client.name)
+                        + '/wallet/transactions?'
+                        + (parameters.startDate ? 'startDate=' + parameters.startDate + '&' : '')
+                        + (parameters.endDate ? 'endDate=' + parameters.endDate : '')
+                    ,
+                    {headers: {Accept: 'application/json'}}
+                )
+                .then(response => response.json())
+                .then((transactions) => {
+                    this.setState(
+                        {
+                            transactions: transactions
+                        }
+                    );
+                });
+        }
     }
 
     componentDidMount() {

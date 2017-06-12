@@ -1,28 +1,34 @@
 import React from 'react';
 import { Form, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 import ClientSelector from './ClientSelector';
 
-export default class TheApplication extends React.Component {
+class SearchForm extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            client: null
+            client: null,
+            startDate: '',
+            endDate: '',
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleClientSelect = this.handleClientSelect.bind(this);
     }
 
-    handleSubmit()
-    {
+    handleSubmit() {
         this.props.handleSearch(this.state);
     }
 
-    handleClientSelect(client)
-    {
+    handleClientSelect(client) {
         this.setState({client});
         this.props.handleSearch(Object.assign({}, this.state, {client}));
+    }
+
+    handleUserInput(val, name) {
+        this.setState({[name]: val});
+        this.props.handleSearch(Object.assign({}, this.state, {[name]: val}));
     }
 
     render () {
@@ -37,15 +43,22 @@ export default class TheApplication extends React.Component {
                 <FormGroup controlId="startDate">
                     <ControlLabel>Start date</ControlLabel>
                     {' '}
-                    <FormControl type="date" />
+                    <FormControl type="date" value={this.state.startDate} onChange={(e) => this.handleUserInput(e.target.value, 'startDate')} />
                 </FormGroup>
                 {' '}
                 <FormGroup controlId="endDate">
                     <ControlLabel>End date</ControlLabel>
                     {' '}
-                    <FormControl type="date" />
+                    <FormControl type="date" value={this.state.endDate} onChange={(e) => this.handleUserInput(e.target.value, 'endDate')} />
                 </FormGroup>
             </Form>
         );
     }
 }
+
+SearchForm.propTypes = {
+    clients: PropTypes.array.isRequired,
+    handleSearch: PropTypes.func.isRequired
+};
+
+export default SearchForm;
