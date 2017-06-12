@@ -47,5 +47,7 @@ database-is-filled-in:
   cmd.wait:
     - name: /vagrant/cli/do-fake-transactions.php
     - runas: {{ pillar.user }}
+    - require:
+      - cmd: backend.dependencies
     - watch:
       - cmd: database-schema-is-deployed
