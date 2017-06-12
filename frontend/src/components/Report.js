@@ -13,7 +13,6 @@ export default (props) => {
             <thead>
             <tr>
                 <th>#</th>
-                <th>Client</th>
                 <th>Timestamp</th>
                 <th>Amount</th>
                 <th>Balance change</th>
@@ -31,7 +30,7 @@ export default (props) => {
             </tbody>
             {listOfTransactions.length ? <tbody>
                 <tr>
-                    <td colSpan={3}/>
+                    <td colSpan={2}/>
                     <td>Summary:</td>
                     <td>
                         <Money amount={props.summary.USD} currency="USD"/>
