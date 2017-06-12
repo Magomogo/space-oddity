@@ -6,6 +6,7 @@ import 'es6-promise/auto';
 import fetch from 'isomorphic-fetch';
 
 import TheApplication from './components/TheApplication';
+import './styles.css';
 
 ReactDOM.render(
     <Grid>
