@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from 'react-bootstrap';
 
 import SearchForm from './SearchForm';
 import Report from './Report';
@@ -10,7 +11,8 @@ export default class TheApplication extends React.Component {
         this.state = {
             clients: [],
             transactions: [],
-            summary: {}
+            summary: {},
+            reportDownloadLink: null
         };
         this.handleSearch = this.handleSearch.bind(this);
     }
@@ -38,7 +40,11 @@ export default class TheApplication extends React.Component {
                     .then(response => response.json())
             ])
             .then(([transactions, summary]) => {
-                this.setState({transactions, summary});
+                this.setState({
+                    transactions,
+                    summary,
+                    reportDownloadLink: baseClientUri + '/wallet/transactions' + (searchQuery.length ? '?' + searchQuery : '')
+                });
             });
         }
     }
@@ -58,6 +64,8 @@ export default class TheApplication extends React.Component {
                 <SearchForm clients={this.state.clients} handleSearch={this.handleSearch}/>
                 <h3>List of transactions</h3>
                 <Report listOfTransactions={this.state.transactions} summary={this.state.summary}/>
+                {this.state.reportDownloadLink &&
+                    <Button bsStyle="info" href={this.state.reportDownloadLink}>Download report as CSV</Button>}
             </div>
         );
     };

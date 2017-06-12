@@ -83,7 +83,9 @@ $app->get(
             ]
         );
 
-        return in_array($request->headers->get('accept', 'text/csv'),  ['text/csv', '*/*'], true) ?
+        return $request->headers->get('accept', 'text/csv') === 'application/json' ?
+            $app->json($list)
+            :
             $app->stream(
                 function () use ($list) {
                     foreach ($list as $idx => $transaction) {
@@ -92,9 +94,7 @@ $app->get(
                 },
                 200,
                 ['Content-Type' => 'text/csv; charset=UTF-8']
-            )
-            :
-            $app->json($list);
+            );
     }
 );
 
