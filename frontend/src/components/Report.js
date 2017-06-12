@@ -2,6 +2,7 @@ import React from 'react';
 import { Table } from 'react-bootstrap';
 
 import Transaction from './Transaction';
+import Money from './Money';
 
 export default (props) => {
 
@@ -28,6 +29,17 @@ export default (props) => {
                     <tr><td colSpan={5} className="text-center">nothing here</td></tr>
             }
             </tbody>
+            {listOfTransactions.length ? <tbody>
+                <tr>
+                    <td colSpan={3}/>
+                    <td>Summary:</td>
+                    <td>
+                        <Money amount={props.summary.USD} currency="USD"/>
+                        {props.summary.own && ', '}
+                        {props.summary.own && <Money amount={props.summary.own.sum} currency={props.summary.own.currency}/>}
+                    </td>
+                </tr>
+            </tbody> : null}
         </Table>
     );
 }

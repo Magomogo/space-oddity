@@ -9,31 +9,37 @@ export default class TheApplication extends React.Component {
         super(props);
         this.state = {
             clients: [],
-            transactions: []
+            transactions: [],
+            summary: {}
         };
         this.handleSearch = this.handleSearch.bind(this);
     }
 
     handleSearch(parameters) {
         if (parameters.client) {
-            this.props
-                .fetch(
-                    'http://acmepay.local/client/'
-                        + encodeURIComponent(parameters.client.name)
-                        + '/wallet/transactions?'
-                        + (parameters.startDate ? 'startDate=' + parameters.startDate + '&' : '')
-                        + (parameters.endDate ? 'endDate=' + parameters.endDate : '')
-                    ,
-                    {headers: {Accept: 'application/json'}}
-                )
-                .then(response => response.json())
-                .then((transactions) => {
-                    this.setState(
-                        {
-                            transactions: transactions
-                        }
-                    );
-                });
+            const
+                baseClientUri = 'http://acmepay.local/client/' + encodeURIComponent(parameters.client.name),
+                searchQuery =
+                    (parameters.startDate ? 'startDate=' + parameters.startDate + '&' : '')
+                    + (parameters.endDate ? 'endDate=' + parameters.endDate : '');
+
+            Promise.all([
+                this.props
+                    .fetch(
+                        baseClientUri + '/wallet/transactions' + (searchQuery.length ? '?' + searchQuery : ''),
+                        {headers: {Accept: 'application/json'}}
+                    )
+                    .then(response => response.json()),
+
+                this.props
+                    .fetch(
+                        baseClientUri + '/wallet/summary' + (searchQuery.length ? '?' + searchQuery : '')
+                    )
+                    .then(response => response.json())
+            ])
+            .then(([transactions, summary]) => {
+                this.setState({transactions, summary});
+            });
         }
     }
 
@@ -51,7 +57,7 @@ export default class TheApplication extends React.Component {
             <div>
                 <SearchForm clients={this.state.clients} handleSearch={this.handleSearch}/>
                 <h3>List of transactions</h3>
-                <Report listOfTransactions={this.state.transactions}/>
+                <Report listOfTransactions={this.state.transactions} summary={this.state.summary}/>
             </div>
         );
     };

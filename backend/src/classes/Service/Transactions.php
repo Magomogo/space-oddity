@@ -184,10 +184,10 @@ SQL
             ['clientId' => $client->id]
         );
 
-        return [
-            ['currency' => 'USD', 'sum' => $this->currenciesService->convert($sum, $ownCurrency, 'USD')],
-            ['currency' => $ownCurrency, 'sum' => $sum]
-        ];
+        return array_merge(
+            ['USD' => $this->currenciesService->convert($sum, $ownCurrency, 'USD')],
+            $ownCurrency !== 'USD' ? ['own' => ['currency' => $ownCurrency, 'sum' => $sum]] : []
+        );
     }
 
     private function filterWhereClause($filter)
